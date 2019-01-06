@@ -1,0 +1,470 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2019 by Tobias Plüss <tpluess@ieee.org>
+%
+% This file may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either
+% version 1.3 of this license or (at your option) any later
+% version.  The latest version of this license is in:
+%
+%    http://www.latex-project.org/lppl.txt
+%
+% and version 1.3 or later is part of all distributions of
+% LaTeX version 2005/12/01 or later.
+%
+% \fi
+%
+% \iffalse
+%<package>\NeedsTeXFormat{LaTeX2e}[2011/06/27]
+%<package>\ProvidesPackage{tikz-imagelabels}
+%<package>  [2019/01/04 v0.1 image labels using TikZ]
+%
+%<*driver>
+\documentclass[a4paper]{ltxdoc}
+\RecordChanges
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{amssymb}
+\usepackage{tikz-imagelabels}
+\usepackage{float}
+
+% default position for floats: H
+\makeatletter
+\renewcommand{\fps@figure}{H}
+\renewcommand{\fps@table}{H}
+\makeatother
+
+\def\pkg{\texttt{tikz-imagelabels}}
+
+\begin{document}
+  \DocInput{tikz-imagelabels.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+% \CheckSum{0}
+%
+% \CharacterTable
+%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%   Digits        \0\1\2\3\4\5\6\7\8\9
+%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%   Dollar        \$     Percent       \%     Ampersand     \&
+%   Acute accent  \'     Left paren    \(     Right paren   \)
+%   Asterisk      \*     Plus          \+     Comma         \,
+%   Minus         \-     Point         \.     Solidus       \/
+%   Colon         \:     Semicolon     \;     Less than     \<
+%   Equals        \=     Greater than  \>     Question mark \?
+%   Commercial at \@     Left bracket  \[     Backslash     \\
+%   Right bracket \]     Circumflex    \^     Underscore    \_
+%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%   Right brace   \}     Tilde         \~}
+%
+% \changes{v0.1}{2019/01/04}{Submission to CTAN}
+%
+% \GetFileInfo{tikz-imagelabels.sty}
+%
+% \title{The \texttt{tikz-imagelabels} package\thanks{This document corresponds to \texttt{tikz-imagelabels}~\fileversion, dated~\filedate.}}
+% \author{Tobias Plüss}
+% \date{\filedate}
+% \thispagestyle{empty}
+% \maketitle
+%
+% \begin{abstract}
+%   This package allows to put annotations (arrows, labels) on top of
+%   images using Ti\emph{k}Z.
+% \end{abstract}
+%
+% \tableofcontents
+%
+% \PrintChanges
+%
+% \StopEventually{}
+%
+% \section{What is it good for?}
+%
+% The package \pkg{} serves two purposes:
+% \begin{itemize}
+% \item put annotation labels on images, as shown for example in \autoref{fig:pleiades}. This figure shows the pleiades and has a label for each star. Also, on the bottom right, there is a small label for the whole image.\footnote{Image taken from \url{http://hubblesite.org/image/1562/news_release/2004-20}}
+% \item put little arrows on a image to highlight certain details, like in \autoref{fig:jupiter}. This figure shows the great red spot in jupiter, with some additional small spots. The spots are highlighted with the aid of the arrows.\footnote{Image taken from \url{http://hubblesite.org/image/2354/news_release/2008-23}}
+% \end{itemize}
+%
+% \begin{figure}
+% \centering
+% \begin{annotationimage}{width=6cm}{img/pleiades.jpg}
+%   \labelleft{0.11,0.4}{Atlas}{0.3}
+%   \labelleft{0.11,0.49}{Pleione}{0.55}
+%   \labelleft{0.39,0.45}{Alcyone}{0.8}
+%   \labelbelow{0.58,0.28}{Merope}{0.5}
+%   \labelright{0.84,0.45}{Electra}{0.3}
+%   \labelright{0.85,0.64}{Caleano}{0.75}
+%   \labelabove{0.67,0.72}{Maia}{0.4}
+%   \labelabove{0.78,0.82}{Taygeta}{0.9}
+%   \imagelabel{M45}
+% \end{annotationimage}
+% \caption{The Pleiades, also known as M45}
+% \label{fig:pleiades}
+% \end{figure}
+%
+% \begin{figure}
+% \centering
+% \begin{annotationimage}{width=6cm}{img/jupiter.jpg}
+%    \marking{0.14}{0.38}{150}
+%    \marking{0.27}{0.24}{-120}
+%    \marking{0.65}{0.4}{-30}
+%    \marking{0.39}{0.11}{40}
+%    \marking{0.74}{0.12}{160}
+% \end{annotationimage}
+% \caption{Detail around the great red spot on jupiter}
+% \label{fig:jupiter}
+% \end{figure}
+%
+% But why does this task deserve its own \LaTeX package? there are several reasons:
+% \begin{itemize}
+%   \item one does not need to edit the photographs in an external graphics
+%   program. They can be input directly into your \LaTeX{} document.
+%   \item since the labels and annotations are processed by \LaTeX{}, all the font
+%   settings and the like remain consistent through the whole the document, including
+%   the labels for images.
+%   \item since the arrows are processed by Ti\emph{k}Z, they are vector graphics.
+%   If one would draw the annotations inside the pixel image, issues with scaling
+%   may occur -- i.e. if on scales up the pixel image, the annotations would be
+%   scaled as well, which often produces a blurry result. On the other hand,
+%   using \pkg{}, the image can be scaled later by any desired amount, while the
+%   annotations stay in place and font sizes and the like are not affected.
+% \end{itemize}
+%
+% \section{How it works}
+%
+% The placement of labels or arrows is done as follows:
+% \begin{enumerate}
+%   \item The user includes the desired image by using the \verb|annotationimage| environment.
+%   \item After that, a help grid can be displayed, as shown in \autoref{fig:pleiades_grid}, by using the \verb|\helpgrid| command. The help grid is scaled such that its bottom left corner always has coordinate $(0,0)$ and the top right corner has always coordinate $(1,1)$. The coordinate axes are labeled accordingly.
+% \begin{figure}
+% \centering
+% \helpgrid
+% \begin{annotationimage}{width=6cm}{img/pleiades.jpg}
+% \end{annotationimage}
+% \caption{Activated help grid}
+% \label{fig:pleiades_grid}
+% \end{figure}
+%   \item The user picks the coordinates for the points to be labeled and inserts the label texts into the \LaTeX{} file.
+%   \item After the labels have been placed as desired, the help grid and the coordinates can be hidden by removing the \verb|\helpgrid| command.
+% \end{enumerate}
+% Note that the labels will remain fixed, even if the image is scaled later, so it will not be necessary to adjust the coordinates
+% later when scaling the image.
+%
+
+% \section{Usage}
+
+% \subsection{Embedding the image}
+
+% \DescribeEnv{annotationimage}
+% This is the environment used to embed the image into the document. It has the
+% following syntax:
+%
+% |annotationimage| \marg{options}\marg{file name}
+%
+% Here, \meta{options} can be any set of options the |\includegraphics| command
+% understands, e.g. |width=5cm| or |height=4cm| or |scale=0.2|. The \meta{options}
+% are indeed processed by |\includegraphics|.
+%
+% The \meta{file name} is the file name of the image file to be used. The same formats as for |\includegraphics| can be used.
+%
+% \emph{Example:} the code
+% \begin{verbatim}
+% \begin{annotationimage}{width=3cm}{example-image}
+% \end{annotationimage}
+% \end{verbatim}
+% embeds the image, just as \verb|\includegraphics| would do, and sets the width of the image to 3.5\,cm. The result is shown below.
+%
+% \vspace{1cm}
+% \begin{annotationimage}{width=5cm}{example-image}
+% \end{annotationimage}
+% \vspace{1cm}
+%
+% \DescribeMacro{\helpgrid}
+% The |\helpgrid| macro may be used to enable the help grid.
+% \emph{Example:} The code
+% \begin{verbatim}
+% \helpgrid
+% \begin{annotationimage}{width=3cm}{example-image}
+% \end{annotationimage}
+% \end{verbatim}
+% embeds the image and overlays it with the help grid. Note that |\helpgrid| should only be used within
+% an environment; if it is used globally, all subsequent |annotationimage| environments will have the
+% grid enabled, too. In this case, |\helpgridoff| may be used.
+%
+% \vspace{1cm}
+% \helpgrid
+% \begin{annotationimage}{width=5cm}{example-image}
+% \end{annotationimage}
+% \vspace{1cm}
+% \helpgridoff
+%
+% \subsection{Adding a label to the image}
+%
+% \DescribeMacro{\imagelabel}
+% This may be used to put a label to the image. The position can be configured
+% globally.
+%
+% \emph{Example:} The code
+% \begin{verbatim}
+% \begin{annotationimage}{width=5cm}{example-image}
+% \imagelabel{sample}
+% \end{annotationimage}
+% \end{verbatim}
+% produces the image shown below.
+%
+% \vspace{1cm}
+% \begin{annotationimage}{width=5cm}{example-image}
+% \imagelabel{sample}
+% \end{annotationimage}
+% \vspace{1cm}
+%
+% \subsection{Adding labeled arrows to the image}
+%
+% There are four different macros to insert labels.
+% \DescribeMacro{\labelleft}
+% \DescribeMacro{\labelabove}
+% \DescribeMacro{\labelright}
+% \DescribeMacro{\labelbelow}
+% The general symtax is as follows: |\label|\meta{position}\marg{coordinates}\marg{text}\marg{align}
+%
+% \meta{position} is any of: |left|, |above|, |right|, |bottom|.
+%
+% The \meta{coordinates} are the coordinates of the point to be labeled. They can be determined with the aid of the |\helpgrid|.
+%
+% The \meta{text} is the actual label text.
+%
+% \meta{align} is the alignment of the text, as follows: one coordinate of the text can be calculated according to the \meta{position}.
+% For instance, if one wants to set a label |above| the image, the $y$ coordinate of the text will be $1.1$, which sets the text outside above
+% the image. In this case, the \meta{align} allows to position the text along the $x$ axis. The example code clarifies the usage of \meta{align}.
+%
+% \emph{Example:} The code
+% \begin{verbatim}
+% \begin{annotationimage}{width=5cm}{example-image}
+% \labelleft{0.5,0.5}{align = 0.1}{0.1}
+% \labelleft{0.5,0.5}{align = 0.5}{0.5}
+% \labelleft{0.5,0.5}{align = 0.9}{0.9}
+% \labelabove{0.5,0.5}{align = 0.1}{0.1}
+% \labelabove{0.5,0.5}{align = 0.5}{0.5}
+% \labelabove{0.5,0.5}{align = 0.9}{0.9}
+% \end{annotationimage}
+% \end{verbatim}
+% produces the image shown below.
+
+% \vspace{1cm}
+% \helpgrid
+% \begin{annotationimage}{width=5cm}{example-image}
+% \labelleft{0.5,0.5}{align = 0.1}{0.1}
+% \labelleft{0.5,0.5}{align = 0.5}{0.5}
+% \labelleft{0.5,0.5}{align = 0.9}{0.9}
+% \labelabove{0.5,0.5}{align = 0.1}{0.1}
+% \labelabove{0.5,0.5}{align = 0.5}{0.5}
+% \labelabove{0.5,0.5}{align = 0.9}{0.9}
+% \end{annotationimage}
+% \helpgridoff
+% \vspace{1cm}
+
+
+
+%
+% \section{Implementation}
+%    \begin{macrocode}
+\RequirePackage{tikz}
+
+\usetikzlibrary{%
+arrows.meta,%
+calc,%
+positioning,%
+decorations,%
+decorations.markings,%
+math,%
+}
+
+\newdimen\markingarrowlength
+
+\tikzset{
+main grid color/.store in = \maingridcolor,
+main grid color = red,
+fine grid color/.store in = \finegridcolor,
+fine grid color = gray,
+image label format/.store in = \imagelabelfont,
+image label format = \sffamily\small,
+annotation/.style = {
+  font = \normalfont\small,
+},
+% detail font size/.store in=\detailfontsize,
+% detail font size = \scriptsize,
+% label font size/.store in = \labelfontsize,
+% label font size = \small,
+% border color/.store in=\bordercolor,
+% border color = black,
+% border thickness/.store in=\borderthickness,
+% border thickness = semithick,
+% fill color/.store in=\fillcolor,
+% fill color = none,
+arrow length/.code = {\setlength{\markingarrowlength}{#1}},
+arrow length = 8mm,
+arrow distance/.store in = \arrowdistance,
+arrow distance = 1.5mm,
+arrow thickness/.store in = \arrowthickness,
+arrow thickness = 0.6mm,
+tip scale/.store in = \tipscale,
+tip scale = 2.7,
+% unit length/.code={\setlength{\unitlen}{#1}},
+% unit length/.append style={x=#1,y=#1},
+% unit length = 8mm,
+}
+
+
+
+
+% if this command is present, the help grid will be shown
+\newcommand{\helpgrid}{\def\helpgridon{}}
+\newcommand{\helpgridoff}{\let\helpgridon\undefined}
+
+% annotated image with grid
+% \begin{annotationimagegrid}{width=1cm}{pic.jpg}
+\newenvironment{annotationimage}[2]{%
+  \small
+  \begin{tikzpicture}
+  \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[#1]{#2}};
+  \begin{scope}[x={(image.south east)},y={(image.north west)}]
+  \ifdefined\helpgridon
+    \draw[help lines, very thin, draw=\finegridcolor, step=0.02] (0,0) grid (1,1);
+    \draw[help lines, very thin, draw=\maingridcolor, thin,xstep=.1,ystep=.1] (0,0) grid (1,1);
+    \foreach \x in {0,1,...,9} { \node [anchor=north] at (\x/10,0) {\tiny 0.\x}; }
+    \node [anchor=north] at (1,0) {\tiny 1};
+    \foreach \y in {0,1,...,9} { \node [anchor=east] at (0,\y/10) {\tiny 0.\y}; }
+    \node [anchor=east] at (0,1) {\tiny 1};
+  \else
+  \fi
+}{%
+ \end{scope}
+ \end{tikzpicture}}
+
+
+% arrows for marking certain points in photographs.
+% usage: \marking{x pos}{y pos}{angle}
+% gives an arrow of length 0.8cm at the desired angle, pointing towards the
+% given coordinate
+\def\marking#1#2#3{% x y angle
+  \draw[double arrow = 0.6mm colored by white and black] ([xshift={\markingarrowlength*cos(#3)}, yshift={\markingarrowlength*sin(#3)}] #1, #2) -- (#1, #2);
+}
+
+\newcommand{\labelleft}[3]{%
+\draw[annotation arrow] (-0.1,#3) node[anchor=east, annotation] {#2} -- (#1);
+}
+
+\newcommand{\labelabove}[3]{%
+\draw[annotation arrow] (#3,1.1) node[anchor=south, annotation] {#2\strut{}} -- (#1);
+}
+
+\newcommand{\labelbelow}[3]{%
+\draw[annotation arrow] (#3,-0.1) node[anchor=north, annotation] {#2\strut{}} -- (#1);
+}
+
+\newcommand{\labelright}[3]{%
+\draw[annotation arrow] (1.1,#3) node[anchor=west, annotation] {#2} -- (#1);
+}
+
+\newcommand{\imagelabel}[1]{%
+\node[image label] at (image.south east) {#1};
+}
+
+\newcommand{\markingcircle}[2]{%
+\node[marking circle = #1] at (#2) {};
+}
+
+% tikz styles for annotations.
+\tikzset{
+  > = latex,
+  % these are the arrows with the black dot at the end.
+  annotation arrow/.style =
+  {
+    -{Circle[fill=black, length=\tipscale*\arrowthickness,  width=\tipscale*\arrowthickness]},
+    line width = \arrowthickness,
+    white,
+    shorten >= \arrowdistance - \tipscale*\arrowthickness/2,
+    postaction =
+    {
+      draw,
+      -{Circle[fill=black, length=\tipscale*\arrowthickness-2*\arrowthickness/3, width=\tipscale*\arrowthickness-2*\arrowthickness/3]},
+      black,
+      line width = \arrowthickness/3,
+      shorten >= \arrowthickness/3 + \arrowdistance - \tipscale*\arrowthickness/2,
+    },
+    text = black
+  },
+  annotation arrow below/.style args = {at #1 to #2 text #3}{
+    annotation arrow,
+    insert path = {(#1,-0.1) node[below] {#3} -- #2},
+  },
+  % arrows with a small circle at the end.
+  circular arrow/.style args = {#1}{
+    {Circle[open,width=#1,length=#1]}-,
+    white,
+    shorten <=-#1/2,
+    line width = 0.6mm,
+    inner sep = 0.3ex,
+    postaction={
+      draw,
+      {Circle[open,width=#1-0.4mm,length=#1-0.4mm]}-,
+      black,
+      line width = 0.2mm,
+      shorten <=-(#1-0.4mm)/2,
+      % shorten >=4.5*(#1)/3
+    },
+    text = black
+  },
+  double arrow/.style args={#1 colored by #2 and #3}{
+    -latex,
+    line width=#1,
+    #2,
+    shorten >= \arrowdistance,
+    postaction={
+      draw,
+      -latex,
+      #3,
+      line width=(#1)/3,
+      shorten <=(#1)/4,
+      shorten >=4.5*(#1)/3+\arrowdistance
+    }
+  },
+  marking circle/.style args = {#1}{
+    circle,
+    minimum size = #1,
+    inner sep = 0pt,
+    line width = 0.6mm,
+    draw=white,
+    inner sep = 0.3ex,
+    postaction =
+    {
+      draw,
+      black,
+      line width = 0.2mm,
+    },
+    text = black
+  },
+  image label/.style =
+  {
+    rectangle,
+    minimum width = 5mm,
+    minimum height = 5mm,
+    fill = black,
+    text = white,
+    font = \imagelabelfont,
+    anchor = south east,
+    xshift = -0.2cm,
+    yshift = 0.2cm
+  }
+}
+%    \end{macrocode}
+%
+% \Finale
+\endinput
