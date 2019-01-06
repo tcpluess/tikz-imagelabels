@@ -286,40 +286,7 @@ decorations.markings,%
 math,%
 }
 
-\newdimen\markingarrowlength
 
-\tikzset{
-main grid color/.store in = \maingridcolor,
-main grid color = red,
-fine grid color/.store in = \finegridcolor,
-fine grid color = gray,
-image label format/.store in = \imagelabelfont,
-image label format = \sffamily\small,
-annotation/.style = {
-  font = \normalfont\small,
-},
-% detail font size/.store in=\detailfontsize,
-% detail font size = \scriptsize,
-% label font size/.store in = \labelfontsize,
-% label font size = \small,
-% border color/.store in=\bordercolor,
-% border color = black,
-% border thickness/.store in=\borderthickness,
-% border thickness = semithick,
-% fill color/.store in=\fillcolor,
-% fill color = none,
-arrow length/.code = {\setlength{\markingarrowlength}{#1}},
-arrow length = 8mm,
-arrow distance/.store in = \arrowdistance,
-arrow distance = 1.5mm,
-arrow thickness/.store in = \arrowthickness,
-arrow thickness = 0.6mm,
-tip scale/.store in = \tipscale,
-tip scale = 2.7,
-% unit length/.code={\setlength{\unitlen}{#1}},
-% unit length/.append style={x=#1,y=#1},
-% unit length = 8mm,
-}
 
 
 
@@ -331,7 +298,25 @@ tip scale = 2.7,
 % annotated image with grid
 % \begin{annotationimagegrid}{width=1cm}{pic.jpg}
 \newenvironment{annotationimage}[2]{%
-  \small
+  \tikzset{
+    main grid color/.store in = \maingridcolor,
+    main grid color = red,
+    fine grid color/.store in = \finegridcolor,
+    fine grid color = gray,
+    image label format/.store in = \imagelabelfont,
+    image label format = \sffamily\small,
+    annotation/.style = {
+      font = \normalfont\small,
+    },
+    arrow length/.store in = \markingarrowlength,
+    arrow length = 8mm,
+    arrow distance/.store in = \arrowdistance,
+    arrow distance = 1.5mm,
+    arrow thickness/.store in = \arrowthickness,
+    arrow thickness = 0.6mm,
+    tip scale/.store in = \tipscale,
+    tip scale = 2.7,
+  }
   \begin{tikzpicture}
   \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[#1]{#2}};
   \begin{scope}[x={(image.south east)},y={(image.north west)}]
