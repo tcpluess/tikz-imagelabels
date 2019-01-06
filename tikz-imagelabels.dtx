@@ -274,65 +274,126 @@
 
 %
 % \section{Implementation}
+% The only dependency of \pkg{} is Ti\emph{k}Z.
 %    \begin{macrocode}
 \RequirePackage{tikz}
-
-\usetikzlibrary{%
-arrows.meta,%
-calc,%
-positioning,%
-decorations,%
-decorations.markings,%
-math,%
+%    \end{macrocode}
+% Some Ti\emph{k}Z libraries are loaded automatically, since they are required
+% to draw the arrows and calculate some positions.
+%    \begin{macrocode}
+\usetikzlibrary{
+  arrows.meta,
+  calc,
+  positioning,
+  decorations,
+  decorations.markings,
+  math,
 }
+%    \end{macrocode}
+% Next, the setup of some Ti\emph{k}Z styles follows.
+%    \begin{macrocode}
+\tikzset{
+%    \end{macrocode}
+% Define the color of the coarse grid. Default is red.
+%    \begin{macrocode}
+  main grid color/.store in = \maingridcolor,
+  main grid color = red,
+%    \end{macrocode}
+% Define the color of the fine grid. Default is gray.
+%    \begin{macrocode}
+  fine grid color/.store in = \finegridcolor,
+  fine grid color = gray,
+%    \end{macrocode}
+% Define the text format of the image labels. The default is: sans serif font, small.
+%    \begin{macrocode}
+  image label format/.store in = \imagelabelfont,
+  image label format = \sffamily\small,
+%    \end{macrocode}
+% Define the text format of the annotation labels. The default is: normal font, small.
+%    \begin{macrocode}
+  annotation format/.store in = \annotationfont,
+  annotation format = \normalfont\small,
+%    \end{macrocode}
+% Define the length of the annotation arrows. The default is 8\,mm.
+%    \begin{macrocode}
+  arrow length/.store in = \markingarrowlength,
+  arrow length = 8mm,
+%    \end{macrocode}
+% Define the distance between the arrow tip and the actual coordinate the arrow points to. The default is 1.5\,mm.
+%    \begin{macrocode}
+  arrow distance/.store in = \arrowdistance,
+  arrow distance = 1.5mm,
+%    \end{macrocode}
+% Define the line width of the arrows. This is actually the total line width, i.e. including the white borders. The default is 0.6\,mm.
+%    \begin{macrocode}
+  arrow thickness/.store in = \arrowthickness,
+  arrow thickness = 0.6mm,
+%    \end{macrocode}
+% The size of the tips of the round arrows can be specified in terms of the linewidth. By default, the tips are 2.7 times as large as the line width.
+%    \begin{macrocode}
+  tip scale/.store in = \tipscale,
+  tip scale = 2.7,
+}
+%    \end{macrocode}
 
 
-
-
-
-
+%    \begin{macrocode}
 % if this command is present, the help grid will be shown
 \newcommand{\helpgrid}{\def\helpgridon{}}
 \newcommand{\helpgridoff}{\let\helpgridon\undefined}
+%    \end{macrocode}
 
-% annotated image with grid
-% \begin{annotationimagegrid}{width=1cm}{pic.jpg}
-\newenvironment{annotationimage}[2]{%
-  \tikzset{
-    main grid color/.store in = \maingridcolor,
-    main grid color = red,
-    fine grid color/.store in = \finegridcolor,
-    fine grid color = gray,
-    image label format/.store in = \imagelabelfont,
-    image label format = \sffamily\small,
-    annotation/.style = {
-      font = \normalfont\small,
-    },
-    arrow length/.store in = \markingarrowlength,
-    arrow length = 8mm,
-    arrow distance/.store in = \arrowdistance,
-    arrow distance = 1.5mm,
-    arrow thickness/.store in = \arrowthickness,
-    arrow thickness = 0.6mm,
-    tip scale/.store in = \tipscale,
-    tip scale = 2.7,
-  }
+
+% Then, the |annotationimage| environment is defined. The environment takes
+% 2 mandatory parameters, both of which are described below.
+%    \begin{macrocode}
+\newenvironment{annotationimage}[2]{
+%    \end{macrocode}
+% By opening a |annotationimage| environment, actually a |tikzpicture| is created.
+%    \begin{macrocode}
   \begin{tikzpicture}
-  \node[anchor=south west,inner sep=0] (image) at (0,0) {\includegraphics[#1]{#2}};
+%    \end{macrocode}
+% Next, we include the image. The options (parameter \#1) and the file name (parameter \#2) are passed to the |\includegraphics| command
+% and the image is included in a Ti\emph{k}Z node called |image|.
+%    \begin{macrocode}
+  \node[anchor=south west, inner sep=0]
+    (image) at (0,0) {\includegraphics[#1]{#2}};
+%    \end{macrocode}
+% A new |scope| is opened to set the coordinate system such that $(0,0)$ is bottom left and $(1,1)$ is top right.
+%    \begin{macrocode}
   \begin{scope}[x={(image.south east)},y={(image.north west)}]
+%    \end{macrocode}
+% Check whether the user wants to draw the help grid. If so, draw the help grid with the appropriate style.
+% Otherwise, if the user does not want to draw the help grid, no further action is taken.
+%    \begin{macrocode}
   \ifdefined\helpgridon
-    \draw[help lines, very thin, draw=\finegridcolor, step=0.02] (0,0) grid (1,1);
-    \draw[help lines, very thin, draw=\maingridcolor, thin,xstep=.1,ystep=.1] (0,0) grid (1,1);
-    \foreach \x in {0,1,...,9} { \node [anchor=north] at (\x/10,0) {\tiny 0.\x}; }
+    \draw[very thin, draw=\finegridcolor, step=0.02]
+      (0,0) grid (1,1);
+    \draw[thin, draw=\maingridcolor, xstep=0.1, ystep=0.1]
+      (0,0) grid (1,1);
+
+    \foreach \x in {0,1,...,9} {
+      \node [anchor=north] at (\x/10,0) {\tiny 0.\x};
+    }
     \node [anchor=north] at (1,0) {\tiny 1};
-    \foreach \y in {0,1,...,9} { \node [anchor=east] at (0,\y/10) {\tiny 0.\y}; }
+
+    \foreach \y in {0,1,...,9} {
+      \node [anchor=east] at (0,\y/10) {\tiny 0.\y};
+    }
     \node [anchor=east] at (0,1) {\tiny 1};
   \else
   \fi
-}{%
+}
+%    \end{macrocode}
+% If the |annotationimage| environment is closed, the |scope| and the
+% |tikzpicture| opened need to be closed.
+%    \begin{macrocode}
+{
  \end{scope}
  \end{tikzpicture}}
+%    \end{macrocode}
 
+%    \begin{macrocode}
 
 % arrows for marking certain points in photographs.
 % usage: \marking{x pos}{y pos}{angle}
@@ -343,19 +404,19 @@ math,%
 }
 
 \newcommand{\labelleft}[3]{%
-\draw[annotation arrow] (-0.1,#3) node[anchor=east, annotation] {#2} -- (#1);
+\draw[annotation arrow] (-0.1,#3) node[anchor=east] {\annotationfont #2} -- (#1);
 }
 
 \newcommand{\labelabove}[3]{%
-\draw[annotation arrow] (#3,1.1) node[anchor=south, annotation] {#2\strut{}} -- (#1);
+\draw[annotation arrow] (#3,1.1) node[anchor=south] {\annotationfont #2\strut{}} -- (#1);
 }
 
 \newcommand{\labelbelow}[3]{%
-\draw[annotation arrow] (#3,-0.1) node[anchor=north, annotation] {#2\strut{}} -- (#1);
+\draw[annotation arrow] (#3,-0.1) node[anchor=north] {\annotationfont #2\strut{}} -- (#1);
 }
 
 \newcommand{\labelright}[3]{%
-\draw[annotation arrow] (1.1,#3) node[anchor=west, annotation] {#2} -- (#1);
+\draw[annotation arrow] (1.1,#3) node[anchor=west] {\annotationfont #2} -- (#1);
 }
 
 \newcommand{\imagelabel}[1]{%
