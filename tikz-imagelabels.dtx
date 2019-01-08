@@ -96,14 +96,14 @@
 % \begin{figure}
 % \centering
 % \begin{annotationimage}{width=6cm}{img/pleiades.jpg}
-%   \labelleft{0.11,0.4}{Atlas}{0.3}
-%   \labelleft{0.11,0.49}{Pleione}{0.55}
-%   \labelleft{0.39,0.45}{Alcyone}{0.8}
-%   \labelbelow{0.58,0.28}{Merope}{0.5}
-%   \labelright{0.84,0.45}{Electra}{0.3}
-%   \labelright{0.85,0.64}{Caleano}{0.75}
-%   \labelabove{0.67,0.72}{Maia}{0.4}
-%   \labelabove{0.78,0.82}{Taygeta}{0.9}
+%   \draw[annotation left = {Atlas at 0.3}] to (0.11,0.4);
+%   \draw[annotation left = {Pleione at 0.55}] to (0.11,0.49);
+%   \draw[annotation left = {Alcyone at 0.8}] to (0.39,0.45);
+%   \draw[annotation below = {Merope at 0.5}] to (0.58,0.28);
+%   \draw[annotation right = {Electra at 0.3}] to (0.84,0.45);
+%   \draw[annotation right = {Caleano at 0.75}] to (0.85,0.64);
+%   \draw[annotation above = {Maia at 0.4}] to (0.67,0.72);
+%   \draw[annotation above = {Taygeta at 0.9}] to (0.78,0.82);
 %   \imagelabel{M45}
 % \end{annotationimage}
 % \caption{The Pleiades, also known as M45}
@@ -325,15 +325,49 @@
   arrow distance/.store in = \arrowdistance,
   arrow distance = 1.5mm,
 %    \end{macrocode}
+% The color of the borders around the arrows to ensure they are visible on (almost) any background.
+%    \begin{macrocode}
+  border color/.store in = \bordercolor,
+  border color = white,
+%    \end{macrocode}
+% The color of the arrows themselves.
+%    \begin{macrocode}
+  arrow color/.store in = \arrowcolor,
+  arrow color = black,
+%    \end{macrocode}
 % Define the line width of the arrows. This is actually the total line width, i.e. including the white borders. The default is 0.6\,mm.
 %    \begin{macrocode}
   arrow thickness/.store in = \arrowthickness,
-  arrow thickness = 0.6mm,
+  arrow thickness = 0.5mm,
 %    \end{macrocode}
 % The size of the tips of the round arrows can be specified in terms of the linewidth. By default, the tips are 2.7 times as large as the line width.
 %    \begin{macrocode}
-  tip scale/.store in = \tipscale,
-  tip scale = 2.7,
+  tip size/.store in = \tipsize,
+  tip size = 1.5mm,
+  annotation below/.style args = {#1 at #2}{
+    annotation arrow,
+    insert path = {
+      (#2,-0.1) node[anchor = north] {\annotationfont #1 \strut{}}
+    }
+  },
+  annotation above/.style args = {#1 at #2}{
+    annotation arrow,
+    insert path = {
+      (#2,1.1) node[anchor = south] {\annotationfont #1 \strut{}}
+    }
+  },
+  annotation left/.style args = {#1 at #2}{
+    annotation arrow,
+    insert path = {
+      (-0.1,#2) node[anchor = east] {\annotationfont #1}
+    }
+  },
+  annotation right/.style args = {#1 at #2}{
+    annotation arrow,
+    insert path = {
+      (1.1,#2) node[anchor = west] {\annotationfont #1}
+    }
+  },
 }
 %    \end{macrocode}
 
@@ -363,6 +397,9 @@
 % A new |scope| is opened to set the coordinate system such that $(0,0)$ is bottom left and $(1,1)$ is top right.
 %    \begin{macrocode}
   \begin{scope}[x={(image.south east)},y={(image.north west)}]
+    \pgfonlayer{l1}
+      \path[clip] (0,0) rectangle (1,1);
+    \endpgfonlayer
 %    \end{macrocode}
 % Check whether the user wants to draw the help grid. If so, draw the help grid with the appropriate style.
 % Otherwise, if the user does not want to draw the help grid, no further action is taken.
@@ -446,25 +483,46 @@
 \node[marking circle = #1] at (#2) {};
 }
 
+
+\pgfdeclarelayer{l1}
+\pgfdeclarelayer{l2}
+\pgfsetlayers{main,l1,l2}
+
+
+\pgfkeys{%
+  /tikz/on layer/.code={
+    \pgfonlayer{#1}\begingroup
+    \aftergroup\endpgfonlayer
+    \aftergroup\endgroup
+  },
+  /tikz/node on layer/.code={
+    \pgfonlayer{#1}\begingroup
+    \expandafter\def\expandafter\tikz@node@finish\expandafter{\expandafter\endgroup\expandafter\endpgfonlayer\tikz@node@finish}%
+  },
+}
+
+
 % tikz styles for annotations.
 \tikzset{
   > = latex,
   % these are the arrows with the black dot at the end.
   annotation arrow/.style =
   {
-    -{Circle[fill=black, length=\tipscale*\arrowthickness,  width=\tipscale*\arrowthickness]},
-    line width = \arrowthickness,
-    white,
-    shorten >= \arrowdistance - \tipscale*\arrowthickness/2,
-    postaction =
+    preaction =
     {
+      on layer = l1,
       draw,
-      -{Circle[fill=black, length=\tipscale*\arrowthickness-2*\arrowthickness/3, width=\tipscale*\arrowthickness-2*\arrowthickness/3]},
-      black,
-      line width = \arrowthickness/3,
-      shorten >= \arrowthickness/3 + \arrowdistance - \tipscale*\arrowthickness/2,
+      -{Circle[fill=\bordercolor, length=\tipsize,  width=\tipsize]},
+      line width = \arrowthickness,
+      \bordercolor,
+      shorten >= \arrowdistance,
     },
-    text = black
+    on layer = l2,
+    draw,
+    -{Circle[fill=\arrowcolor, length=\tipsize-2*\arrowthickness/3, width=\tipsize-2*\arrowthickness/3]},
+    \arrowcolor,
+    line width = \arrowthickness/3,
+    shorten >= \arrowthickness/3 + \arrowdistance,
   },
   annotation arrow below/.style args = {at #1 to #2 text #3}{
     annotation arrow,
