@@ -109,7 +109,7 @@
 %   \draw[annotation right = {Caleano at 0.75}] to (0.85,0.64);
 %   \draw[annotation above = {Maia at 0.4}] to (0.67,0.72);
 %   \draw[annotation above = {Taygeta at 0.9}] to (0.78,0.82);
-%   \imagelabel{M45}
+%   \draw[image label = {M45 at south east}];
 % \end{annotationimage}
 % \caption{The Pleiades, also known as M45}
 % \label{fig:pleiades}
@@ -139,8 +139,7 @@
 %
 % \begin{figure}
 % \centering
-% \helpgrid
-% \begin{annotationimage}{width=6cm}{pleiades.jpg}
+% \begin{annotationimage}[grid]{width=6cm}{pleiades.jpg}
 % \end{annotationimage}
 % \caption{Activated help grid}
 % \label{fig:pleiades_grid}
@@ -160,130 +159,136 @@
 %   \draw[annotation right = {Caleano at 0.75}] to (0.85,0.64);
 %   \draw[annotation above = {Maia at 0.4}] to (0.67,0.72);
 %   \draw[annotation above = {Taygeta at 0.9}] to (0.78,0.82);
-%   \imagelabel{M45}
+%   \draw[image label = {M45 at south east}];
 % \end{annotationimage}
 % \end{verbatim}
 %
-
 % \section{Usage}
-
-% \subsection{Embedding the image}
-
+%
+% \subsection{Inclusion of the image}
+%
 % \DescribeEnv{annotationimage}
-% This is the environment used to embed the image into the document. It has the
-% following syntax:
+% To actually include an image, the |annotationimage| environment is used. It
+% has the following syntax:
 %
-% |annotationimage| \marg{options}\marg{file name}
+% |annotationimage|\oarg{grid}\marg{options}\marg{file name}
 %
-% Here, \meta{options} can be any set of options the |\includegraphics| command
-% understands, e.g. |width=5cm| or |height=4cm| or |scale=0.2|. The \meta{options}
-% are indeed processed by |\includegraphics|.
+% The \meta{grid} is an optional parameter. If this parameter is present, i.e.
+% if it has the value |[grid]|, then the help grid is visible. If the parameter
+% is omitted, no help grid is drawn. For instance, \autoref{fig:pleiades_grid}
+% was produced using the following code:
 %
-% The \meta{file name} is the file name of the image file to be used. The same formats as for |\includegraphics| can be used.
-%
-% \emph{Example:} the code
 % \begin{verbatim}
-% \begin{annotationimage}{width=3cm}{example-image}
+% \begin{annotationimage}[grid]{width=6cm}{pleiades.jpg}|
 % \end{annotationimage}
 % \end{verbatim}
-% embeds the image, just as \verb|\includegraphics| would do, and sets the width of the image to 3.5\,cm. The result is shown below.
 %
-% \vspace{1cm}
-% \begin{annotationimage}{width=5cm}{example-image}
-% \end{annotationimage}
-% \vspace{1cm}
+% \meta{options} is any set of options understood by the
+% |\includegraphics| command, e.g. |width=|, |height=| and so on. It may also be
+% left empty.
 %
-% \DescribeMacro{\helpgrid}
-% The |\helpgrid| macro may be used to enable the help grid.
-% \emph{Example:} The code
-% \begin{verbatim}
-% \helpgrid
-% \begin{annotationimage}{width=3cm}{example-image}
-% \end{annotationimage}
-% \end{verbatim}
-% embeds the image and overlays it with the help grid. Note that |\helpgrid| should only be used within
-% an environment; if it is used globally, all subsequent |annotationimage| environments will have the
-% grid enabled, too. In this case, |\helpgridoff| may be used.
+% The \meta{file name} is, obviously, the file name of the image. Like for the
+% \meta{options}, any image format supported by |\includegraphics| may be used.
 %
-% \vspace{1cm}
-% \helpgrid
-% \begin{annotationimage}{width=5cm}{example-image}
-% \end{annotationimage}
-% \vspace{1cm}
-% \helpgridoff
+% \subsection{Adding annotations} \label{sect:add_annotations}
 %
-% \subsection{Adding a label to the image}
+% An annotation is added with the aid of the \tkz{} macro |\draw|. The syntax is
+% as follows:
 %
-% \DescribeMacro{\imagelabel}
-% This may be used to put a label to the image. The position can be configured
-% globally.
+% |\draw[annotation |\meta{alignment}| = {|\meta{text}| at |\meta{position}|}] to (|\meta{x}|, |\meta{y}|);|
 %
-% \emph{Example:} The code
-% \begin{verbatim}
-% \begin{annotationimage}{width=5cm}{example-image}
-% \imagelabel{sample}
-% \end{annotationimage}
-% \end{verbatim}
-% produces the image shown below.
+% The \meta{alignment} is one of: |above|, |right|, |below| or |left|. It tells
+% on which side of the image the annotation will appear.
 %
-% \vspace{1cm}
-% \begin{annotationimage}{width=5cm}{example-image}
-% \imagelabel{sample}
-% \end{annotationimage}
-% \vspace{1cm}
+% The \meta{text} is the actual text of the annotation. It may contain spaces
+% and so on. However, if the text ends with the word ``at'', this will cause
+% trouble with the subsequent options. Example:
 %
-% \subsection{Adding labeled arrows to the image}
+% |\draw[annotation below = {troubles at at 0.5}] to (0.5, 0.5);|
 %
-% There are four different macros to insert labels.
-% \DescribeMacro{\labelleft}
-% \DescribeMacro{\labelabove}
-% \DescribeMacro{\labelright}
-% \DescribeMacro{\labelbelow}
-% The general symtax is as follows: |\label|\meta{position}\marg{coordinates}\marg{text}\marg{align}
+% This code won't compile. However, if it is required to end the label text with
+% ``at'', the text may be put in curly braces:
 %
-% \meta{position} is any of: |left|, |above|, |right|, |bottom|.
+% |\draw[annotation below = {{troubles at} at 0.5}] to (0.5, 0.5);|
 %
-% The \meta{coordinates} are the coordinates of the point to be labeled. They can be determined with the aid of the |\helpgrid|.
+% The \meta{position} is the location of the text. If the text is left or right
+% of the image, a \meta{position} of 0 will align the text with the very bottom
+% of the image, whereas a location of 1 will align the text with the top of the
+% image. Consequently, if the text is to be put above or below of the image, a
+% \meta{position} of 0 will align the text with the image's left side, whereas
+% a \meta{position} of 1 will align the text with the image's right side.
+% \autoref{fig:position_example} should clarify how the \meta{position} is
+% interpreted.
 %
-% The \meta{text} is the actual label text.
+% \begin{figure}
+%   \centering
+%   \begin{annotationimage}[grid]{width=6cm}{example-image}|
+%   \draw[annotation below = {\meta{position} = 0 at 0}] to (0.5, 0.5);
+%   \draw[annotation below = {\meta{position} = 0.5 at 0.5}] to (0.5, 0.5);
+%   \draw[annotation below = {\meta{position} = 1 at 1}] to (0.5, 0.5);
+%   \draw[annotation left = {\meta{position} = 0 at 0}] to (0.5, 0.5);
+%   \draw[annotation left = {\meta{position} = 0.5 at 0.5}] to (0.5, 0.5);
+%   \draw[annotation left = {\meta{position} = 1 at 1}] to (0.5, 0.5);
+%   \draw[annotation above = {\meta{position} = 0 at 0}] to (0.5, 0.5);
+%   \draw[annotation above = {\meta{position} = 0.5 at 0.5}] to (0.5, 0.5);
+%   \draw[annotation above = {\meta{position} = 1 at 1}] to (0.5, 0.5);
+%   \draw[annotation right = {\meta{position} = 0 at 0}] to (0.5, 0.5);
+%   \draw[annotation right = {\meta{position} = 0.5 at 0.5}] to (0.5, 0.5);
+%   \draw[annotation right = {\meta{position} = 1 at 1}] to (0.5, 0.5);
+%   \end{annotationimage}
+%   \caption{Example for the position}
+%   \label{fig:position_example}
+% \end{figure}
 %
-% \meta{align} is the alignment of the text, as follows: one coordinate of the text can be calculated according to the \meta{position}.
-% For instance, if one wants to set a label |above| the image, the $y$ coordinate of the text will be $1.1$, which sets the text outside above
-% the image. In this case, the \meta{align} allows to position the text along the $x$ axis. The example code clarifies the usage of \meta{align}.
+% The \meta{x} and \meta{y} parameters are the actual coordinates where the
+% arrow should point to. Note that the arrows in \autoref{fig:position_example}
+% all have their \meta{x} and \meta{y} set to 0.5, but as one can see, there
+% is a small distance between the arrow's tip and the actual point $(0.5, 0.5)$.
+% This is a distance introduced deliberately such that the arrow tips are close
+% to the desired point, but don't cover it.
 %
-% \emph{Example:} The code
-% \begin{verbatim}
-% \begin{annotationimage}{width=5cm}{example-image}
-% \labelleft{0.5,0.5}{align = 0.1}{0.1}
-% \labelleft{0.5,0.5}{align = 0.5}{0.5}
-% \labelleft{0.5,0.5}{align = 0.9}{0.9}
-% \labelabove{0.5,0.5}{align = 0.1}{0.1}
-% \labelabove{0.5,0.5}{align = 0.5}{0.5}
-% \labelabove{0.5,0.5}{align = 0.9}{0.9}
-% \end{annotationimage}
-% \end{verbatim}
-% produces the image shown below.
-
-% \vspace{1cm}
-% \helpgrid
-% \begin{annotationimage}{width=5cm}{example-image}
-% \labelleft{0.5,0.5}{align = 0.1}{0.1}
-% \labelleft{0.5,0.5}{align = 0.5}{0.5}
-% \labelleft{0.5,0.5}{align = 0.9}{0.9}
-% \labelabove{0.5,0.5}{align = 0.1}{0.1}
-% \labelabove{0.5,0.5}{align = 0.5}{0.5}
-% \labelabove{0.5,0.5}{align = 0.9}{0.9}
-% \end{annotationimage}
-% \helpgridoff
-% \vspace{1cm}
-
-
+% \subsection{Adding a label}
+%
+% A label (like the ``M45'' in \autoref{fig:pleiades}) can be added to the image
+% using following |\draw| macro:
+%
+% |\draw[image label = {|\meta{text}| at |\meta{position}|}];|
+%
+% The \meta{text} parameter is obvious. It contains the text to be put into the
+% label. The same restrictions apply as for the annotations described in
+% \autoref{sect:add_annotations}.
+%
+% The \meta{position} dictates the placement of the label. It may be one of
+% |north west|, |north|, |north east|, |east|, |south east|, |south|,
+% |south west| or |west|. Also |center| is possible, even though it possibly
+% doesn't make a lot of sense. \autoref{fig:label_example} shows an example
+% with several labels.
+%
+% \begin{figure}
+%   \centering
+%   \begin{annotationimage}[grid]{width=6cm}{example-image}|
+%   \draw[image label = {north at north}];
+%   \draw[image label = {north east at north east}];
+%   \draw[image label = {east at east}];
+%   \draw[image label = {south east at south east}];
+%   \draw[image label = {south at south}];
+%   \draw[image label = {south west at south west}];
+%   \draw[image label = {west at west}];
+%   \draw[image label = {north west at north west}];
+%   \draw[image label = {center at center}];
+%   \end{annotationimage}
+%   \caption{Example for the labels}
+%   \label{fig:label_example}
+% \end{figure}
+%
+% Of course, the appearance of the labels can be configured in detail.
 
 %
 % \section{Implementation}
 % The only dependency of \pkg{} is Ti\emph{k}Z.
 %    \begin{macrocode}
 \RequirePackage{tikz}
+\RequirePackage{xifthen}
 %    \end{macrocode}
 % Some Ti\emph{k}Z libraries are loaded automatically, since they are required
 % to draw the arrows and calculate some positions.
@@ -364,7 +369,7 @@
 % Then, the |annotationimage| environment is defined. The environment takes
 % 2 mandatory parameters, both of which are described below.
 %    \begin{macrocode}
-\newenvironment{annotationimage}[2]{
+\newenvironment{annotationimage}[3][]{
 %    \end{macrocode}
 % By opening a |annotationimage| environment, actually a |tikzpicture| is created.
 %    \begin{macrocode}
@@ -374,7 +379,7 @@
 % and the image is included in a Ti\emph{k}Z node called |image|.
 %    \begin{macrocode}
   \node[anchor=south west, inner sep=0]
-    (image) at (0,0) {\includegraphics[#1]{#2}};
+    (image) at (0,0) {\includegraphics[#2]{#3}};
 %    \end{macrocode}
 % A new |scope| is opened to set the coordinate system such that $(0,0)$ is bottom left and $(1,1)$ is top right.
 %    \begin{macrocode}
@@ -386,7 +391,7 @@
 % Check whether the user wants to draw the help grid. If so, draw the help grid with the appropriate style.
 % Otherwise, if the user does not want to draw the help grid, no further action is taken.
 %    \begin{macrocode}
-  \ifdefined\helpgridon
+  \ifthenelse{\equal{#1}{grid}}{%
     \draw[very thin, draw=\finegridcolor, step=0.02]
       (0,0) grid (1,1);
     \draw[thin, draw=\maingridcolor, xstep=0.1, ystep=0.1]
@@ -401,8 +406,7 @@
       \node [anchor=east] at (0,\y/10) {\tiny 0.\y};
     }
     \node [anchor=east] at (0,1) {\tiny 1};
-  \else
-  \fi
+  }{}
 }
 %    \end{macrocode}
 % If the |annotationimage| environment is closed, the |scope| and the
@@ -628,7 +632,25 @@
     },
     text = black
   },
-  image label/.style =
+  image label style/.style = {
+    rectangle,
+    minimum width = 5mm,
+    minimum height = 5mm,
+    fill = black,
+    text = white,
+    font = \imagelabelfont,
+    % xshift = -0.2cm,
+    % yshift = 0.2cm,
+  },
+  image label/.style args = {#1 at #2}{
+    % anchor = #2,
+    insert path = {
+    % text depth=0.25em, inner sep=0.2em,
+      % (image.#2) node[anchor = #2, image label style] {#1}
+      (image.#2) node[outer sep = 2mm, anchor=#2, image label style] {#1}
+    }
+  },
+  old image label/.style =
   {
     rectangle,
     minimum width = 5mm,
