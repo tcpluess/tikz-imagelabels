@@ -282,17 +282,130 @@
 % \end{figure}
 %
 % Of course, the appearance of the labels can be configured in detail.
+%
+% \section{Configuring styles}
+%
+% \DescribeMacro{\imagelabelset}
+% The style (color, font, line width and so on) of annotations and labels may be
+% configured using the |\imagelabelset| macro.
+% The syntax is as follows:
+%
+% |\imagelabelset{|\meta{key}| = |\meta{value}|, ...}|
+%
+% Multiple \meta{key} and \meta{value} pairs may be combined. The following
+% sections list all possible configurations.
+%
+% |\imagelabelset| can be put anywhere in the code, but preferrably it is
+% only used once in the preamble. This ensures that all images have the same
+% style.
+%
+% \subsection{Grid}
+%
+% For the grid, following parameters can be configured:
+% \begin{itemize}
+%   \item |main grid color| is the color of the thicker grid lines.
+%   \item |fine grid color| is the color of the thin grid lines.
+% \end{itemize}
+% The example below shows how the grid colors can be configured.
+%
+% \begin{minipage}[c]{.49\textwidth}
+% \begin{verbatim}
+% \imagelabelset{
+%   main grid color = green,
+%   fine grid color = black,
+% }
+% \end{verbatim}
+% \end{minipage}
+% \begin{minipage}[c]{.49\textwidth}
+% \imagelabelset{
+%   main grid color = green,
+%   fine grid color = black,
+% }
+%   \begin{annotationimage}[grid]{width=5cm}{example-image}|
+%   \end{annotationimage}
+% \end{minipage}
+%
+% \subsection{Format of labels}
+%
+% The labels support following properties:
+% \begin{itemize}
+%   \item |image label font|, configures the font for the label
+%   \item |image label distance|, sets the distance between the border of the
+%   image ant the label
+%   \item |image label back| sets the background color (default black)
+%   \item |image label text| sets the text color
+% \end{itemize}
+%
+% \begin{minipage}[c]{.49\textwidth}
+% \begin{verbatim}
+% \imagelabelset{
+%   image label font =
+%      \ttfamily\bfseries\Large,
+%   image label distance = 10mm,
+%   image label back = yellow,
+%   image label text = red,
+% }
+% \end{verbatim}
+% \end{minipage}
+% \begin{minipage}[c]{.49\textwidth}
+% \imagelabelset{
+%   image label font =
+%     \ttfamily\bfseries\Large,
+%   image label back = yellow,
+%   image label text = red,
+%   image label distance = 1mm,
+% }
+%   \begin{annotationimage}{width=5cm}{example-image}|
+%   \draw[image label = {tt font at south east}];
+%   \end{annotationimage}
+% \end{minipage}
+%
+% \subsection{Format of annotations}
+%
+% The annotations have following properties:
+% \begin{itemize}
+%   \item |annotation font| is the font of the actual annotation
+%   \item |arrow distance| is the distance between the very tip of the arrow and the actual coordinate specified
+%   \item |border color| is the contrast color (halo) around the arrow to ensure it is visible on any background
+%   \item |arrow color| is the color of the line of the arrow and the dot at the tip
+%   \item |arrow thickness| is the line width (including the border)
+%   \item |tip size| is the size of the arrow's tip
+% \end{itemize}
+%
+% \begin{minipage}[c]{.49\textwidth}
+% \begin{verbatim}
+% \imagelabelset{
+%   annotation font = \sffamily\tiny,
+%   arrow distance = 0mm,
+%   border color = blue,
+%   arrow color = green,
+%   arrow thickness = 2mm,
+%   tip size = 5mm,
+%   annotation text color = red,
+% }
+% \end{verbatim}
+% \end{minipage}
+% \begin{minipage}[c]{.49\textwidth}
+% \imagelabelset{
+%   annotation font = \sffamily\tiny,
+%   arrow distance = 0mm,
+%   border color = blue,
+%   arrow color = green,
+%   arrow thickness = 2mm,
+%   tip size = 5mm,
+%   annotation text color = red,
+% }
+%   \begin{annotationimage}{width=5cm}{example-image}|
+%   \draw[annotation below = {stuff at 0.3}] to (0.5, 0.5);
+%   \end{annotationimage}
+% \end{minipage}
 
 %
 % \section{Implementation}
-% The only dependency of \pkg{} is Ti\emph{k}Z.
 %    \begin{macrocode}
 \RequirePackage{tikz}
 \RequirePackage{xifthen}
-%    \end{macrocode}
-% Some Ti\emph{k}Z libraries are loaded automatically, since they are required
-% to draw the arrows and calculate some positions.
-%    \begin{macrocode}
+
 \usetikzlibrary{
   arrows.meta,
   calc,
@@ -301,96 +414,60 @@
   decorations.markings,
   math,
 }
-%    \end{macrocode}
-% Next, the setup of some Ti\emph{k}Z styles follows.
-%    \begin{macrocode}
-\tikzset{
-%    \end{macrocode}
-% Define the color of the coarse grid. Default is red.
-%    \begin{macrocode}
+
+\pgfkeys{
+  /imagelabels/.is family,
+  /imagelabels/.search also={/tikz},
+}
+\def\imagelabelset{\pgfqkeys{/imagelabels}}
+
+% grid
+\imagelabelset{
   main grid color/.store in = \maingridcolor,
   main grid color = red,
-%    \end{macrocode}
-% Define the color of the fine grid. Default is gray.
-%    \begin{macrocode}
   fine grid color/.store in = \finegridcolor,
   fine grid color = gray,
-%    \end{macrocode}
-% Define the text format of the image labels. The default is: sans serif font, small.
-%    \begin{macrocode}
-  image label format/.store in = \imagelabelfont,
-  image label format = \sffamily\small,
-%    \end{macrocode}
-% Define the text format of the annotation labels. The default is: normal font, small.
-%    \begin{macrocode}
-  annotation format/.store in = \annotationfont,
-  annotation format = \normalfont\small,
-%    \end{macrocode}
-% Define the length of the annotation arrows. The default is 8\,mm.
-%    \begin{macrocode}
-  arrow length/.store in = \markingarrowlength,
-  arrow length = 8mm,
-%    \end{macrocode}
-% Define the distance between the arrow tip and the actual coordinate the arrow points to. The default is 1.5\,mm.
-%    \begin{macrocode}
+}
+
+% labels
+\imagelabelset{
+  image label font/.store in = \imagelabelfont,
+  image label font = \sffamily\bfseries\small,
+  image label distance/.store in = \imagelabelsep,
+  image label distance = 2mm,
+  image label back/.store in = \imagelabelback,
+  image label back = black,
+  image label text/.store in = \imagelabeltext,
+  image label text = white,
+}
+
+% annotations
+\imagelabelset{
+  annotation font/.store in = \annotationfont,
+  annotation font = \normalfont\small,
+  annotation text color/.store in = \annottextcolor,
+  annotation text color = black,
   arrow distance/.store in = \arrowdistance,
   arrow distance = 1.5mm,
-%    \end{macrocode}
-% The color of the borders around the arrows to ensure they are visible on (almost) any background.
-%    \begin{macrocode}
   border color/.store in = \bordercolor,
   border color = white,
-%    \end{macrocode}
-% The color of the arrows themselves.
-%    \begin{macrocode}
   arrow color/.store in = \arrowcolor,
   arrow color = black,
-%    \end{macrocode}
-% Define the line width of the arrows. This is actually the total line width, i.e. including the white borders. The default is 0.6\,mm.
-%    \begin{macrocode}
   arrow thickness/.store in = \arrowthickness,
   arrow thickness = 0.5mm,
-%    \end{macrocode}
-% The size of the tips of the round arrows can be specified in terms of the linewidth. By default, the tips are 2.7 times as large as the line width.
-%    \begin{macrocode}
   tip size/.store in = \tipsize,
   tip size = 1.5mm,
 }
-%    \end{macrocode}
 
-
-%    \begin{macrocode}
-% if this command is present, the help grid will be shown
-\newcommand{\helpgrid}{\def\helpgridon{}}
-\newcommand{\helpgridoff}{\let\helpgridon\undefined}
-%    \end{macrocode}
-
-
-% Then, the |annotationimage| environment is defined. The environment takes
-% 2 mandatory parameters, both of which are described below.
-%    \begin{macrocode}
 \newenvironment{annotationimage}[3][]{
-%    \end{macrocode}
-% By opening a |annotationimage| environment, actually a |tikzpicture| is created.
-%    \begin{macrocode}
+  \let\tikzset\imagelabelset
   \begin{tikzpicture}
-%    \end{macrocode}
-% Next, we include the image. The options (parameter \#1) and the file name (parameter \#2) are passed to the |\includegraphics| command
-% and the image is included in a Ti\emph{k}Z node called |image|.
-%    \begin{macrocode}
   \node[anchor=south west, inner sep=0]
     (image) at (0,0) {\includegraphics[#2]{#3}};
-%    \end{macrocode}
-% A new |scope| is opened to set the coordinate system such that $(0,0)$ is bottom left and $(1,1)$ is top right.
-%    \begin{macrocode}
   \begin{scope}[x={(image.south east)},y={(image.north west)}]
     \pgfonlayer{l1}
       \path[clip] (0,0) rectangle (1,1);
     \endpgfonlayer
-%    \end{macrocode}
-% Check whether the user wants to draw the help grid. If so, draw the help grid with the appropriate style.
-% Otherwise, if the user does not want to draw the help grid, no further action is taken.
-%    \begin{macrocode}
   \ifthenelse{\equal{#1}{grid}}{%
     \draw[very thin, draw=\finegridcolor, step=0.02]
       (0,0) grid (1,1);
@@ -408,72 +485,13 @@
     \node [anchor=east] at (0,1) {\tiny 1};
   }{}
 }
-%    \end{macrocode}
-% If the |annotationimage| environment is closed, the |scope| and the
-% |tikzpicture| opened need to be closed.
-%    \begin{macrocode}
 {
  \end{scope}
  \end{tikzpicture}}
-%    \end{macrocode}
-
-% \subsection{Marking arrows}
-% This is the macro for drawing the arrows to highlight certain points. It
-% constructs an arrow from the given coordinate $(x_0, y_0)$ to the coordinate
-% \begin{equation}
-% x_1 = x_0 + l \cos \alpha \quad\text{,}\quad y_1 = y_0 + l \sin \alpha
-% \end{equation}
-% where $l$ is the length of one arrow and $\alpha$ is the angle. Note that the
-% |double arrow| style also shortens the arrow by the |\arrowdistance| such that
-% the arrow tip does not cover the point of interest.
-%    \begin{macrocode}
-\def\marking#1#2#3{% x y angle
-  \draw[marking arrow]
-    ([xshift={\markingarrowlength*cos(#3)},
-      yshift={\markingarrowlength*sin(#3)}] #1, #2) -- (#1, #2);
-}
-%    \end{macrocode}
-
-% \subsection{Label code}
-% The macros described here are used for the arrows with labels. Arrows left of
-% the image are constructed with |\labelleft|. This is implemented as follows
-%    \begin{macrocode}
-\newcommand{\labelleft}[3]{%
-  \draw[annotation arrow] (-0.1,#3)
-    node[anchor=east] {\annotationfont #2} -- (#1);
-}
-%    \end{macrocode}
-% which draws an arrow from the coordinate $(-0.1, x_0)$ to the coordinate
-% $(x_1, y_1)$. The first parameter of the macro corresponds to $(x_1, y_1)$
-% whereas the third parameter corresponds to $x_0$. The label text is derived
-% from the second parameter.
-%    \begin{macrocode}
-
-\newcommand{\labelabove}[3]{%
-\draw[annotation arrow] (#3,1.1) node[anchor=south] {\annotationfont #2\strut{}} -- (#1);
-}
-
-\newcommand{\labelbelow}[3]{%
-\draw[annotation arrow] (#3,-0.1) node[anchor=north] {\annotationfont #2\strut{}} -- (#1);
-}
-
-\newcommand{\labelright}[3]{%
-\draw[annotation arrow] (1.1,#3) node[anchor=west] {\annotationfont #2} -- (#1);
-}
-
-\newcommand{\imagelabel}[1]{%
-\node[image label] at (image.south east) {#1};
-}
-
-\newcommand{\markingcircle}[2]{%
-\node[marking circle = #1] at (#2) {};
-}
-
 
 \pgfdeclarelayer{l1}
 \pgfdeclarelayer{l2}
 \pgfsetlayers{main,l1,l2}
-
 
 \pgfkeys{%
   /tikz/on layer/.code={
@@ -487,9 +505,8 @@
   },
 }
 
-
 % tikz styles for annotations.
-\tikzset{
+\imagelabelset{
   % these are the arrows with the black dot at the end.
   annotation arrow/.style =
   {
@@ -500,77 +517,67 @@
       -{Circle[fill=\bordercolor, length=\tipsize,  width=\tipsize]},
       line width = \arrowthickness,
       \bordercolor,
-      shorten >= \arrowdistance,
+      shorten >= \arrowdistance - \tipsize/2,
     },
     on layer = l2,
     draw,
     -{Circle[fill=\arrowcolor, length=\tipsize-2*\arrowthickness/3, width=\tipsize-2*\arrowthickness/3]},
     \arrowcolor,
     line width = \arrowthickness/3,
-    shorten >= \arrowthickness/3 + \arrowdistance,
+    shorten >= \arrowthickness/3 + \arrowdistance - \tipsize/2,
   },
   annotation below/.style args = {#1 at #2}{
     annotation arrow,
     insert path = {
     % text depth=0.25em, inner sep=0.2em,
-      (#2,-0.1) node[anchor = north, font=\annotationfont] {#1\strut}
+      (#2,-0.1) node[anchor = north, font=\annotationfont, text = \annottextcolor] {#1\strut}
     }
   },
   annotation above/.style args = {#1 at #2}{
     annotation arrow,
     insert path = {
     % text depth=0.25em, inner sep=0.2em,
-      (#2,1.1) node[anchor = south, font=\annotationfont] {#1\strut}
+      (#2,1.1) node[anchor = south, font=\annotationfont, text = \annottextcolor] {#1\strut}
     }
   },
   annotation left/.style args = {#1 at #2}{
     annotation arrow,
     insert path = {
-      (-0.1,#2) node[anchor = east, font=\annotationfont] {#1}
+      (-0.1,#2) node[anchor = east, font=\annotationfont, text = \annottextcolor] {#1}
     }
   },
   annotation right/.style args = {#1 at #2}{
     annotation arrow,
     insert path = {
-      (1.1,#2) node[anchor = west, font=\annotationfont] {#1}
+      (1.1,#2) node[anchor = west, font=\annotationfont, text = \annottextcolor] {#1}
     }
   },
 }
 
-% tikz style for the arrow with the circle
-\tikzset{
-  % arrows with a small circle at the end.
-  circular arrow/.style =
-  {
-    preaction =
-    {
-      draw,
-      on layer = l1,
-      -{Circle[open,width=#1,length=#1]},
-      \bordercolor,
-      shorten >= -#1/2,
-      line width = \arrowthickness,
-      % inner sep = 0.3ex,
-    },
-    on layer = l2,
-    draw,
-    -{Circle[open,width=#1-2*\arrowthickness/3,length=#1-2*\arrowthickness/3]},
-    black,
-    line width = \arrowthickness/3,
-    shorten >= -(#1-2*\arrowthickness/3)/2,
-    text = black
+% labels
+\imagelabelset{
+  image label style/.style = {
+    rectangle,
+    minimum width = 5mm,
+    minimum height = 5mm,
+    fill = \imagelabelback,
+    text = \imagelabeltext,
+    font = \imagelabelfont,
+    % xshift = -0.2cm,
+    % yshift = 0.2cm,
   },
-  circular annotation below/.style args = {#1 at #2 size #3}{
-    circular arrow = #3,
+  image label/.style args = {#1 at #2}{
+    % anchor = #2,
     insert path = {
     % text depth=0.25em, inner sep=0.2em,
-      (#2,-0.1) node[anchor = north, font=\annotationfont] {#1\strut}
+      % (image.#2) node[anchor = #2, image label style] {#1}
+      (image.#2) node[outer sep = \imagelabelsep, anchor=#2, image label style] {#1}
     }
   },
 }
 
 % style for the simple arrows
-\tikzset{
+\imagelabelset{
   marking arrow/.style =
   {
     preaction = {
@@ -632,24 +639,6 @@
     },
     text = black
   },
-  image label style/.style = {
-    rectangle,
-    minimum width = 5mm,
-    minimum height = 5mm,
-    fill = black,
-    text = white,
-    font = \imagelabelfont,
-    % xshift = -0.2cm,
-    % yshift = 0.2cm,
-  },
-  image label/.style args = {#1 at #2}{
-    % anchor = #2,
-    insert path = {
-    % text depth=0.25em, inner sep=0.2em,
-      % (image.#2) node[anchor = #2, image label style] {#1}
-      (image.#2) node[outer sep = 2mm, anchor=#2, image label style] {#1}
-    }
-  },
   old image label/.style =
   {
     rectangle,
@@ -663,6 +652,40 @@
     yshift = 0.2cm
   }
 }
+
+
+% tikz style for the arrow with the circle
+\imagelabelset{
+  % arrows with a small circle at the end.
+  circular arrow/.style =
+  {
+    preaction =
+    {
+      draw,
+      on layer = l1,
+      -{Circle[open,width=#1,length=#1]},
+      \bordercolor,
+      shorten >= -#1/2,
+      line width = \arrowthickness,
+      % inner sep = 0.3ex,
+    },
+    on layer = l2,
+    draw,
+    -{Circle[open,width=#1-2*\arrowthickness/3,length=#1-2*\arrowthickness/3]},
+    black,
+    line width = \arrowthickness/3,
+    shorten >= -(#1-2*\arrowthickness/3)/2,
+    text = black
+  },
+  circular annotation below/.style args = {#1 at #2 size #3}{
+    circular arrow = #3,
+    insert path = {
+    % text depth=0.25em, inner sep=0.2em,
+      (#2,-0.1) node[anchor = north, font=\annotationfont] {#1\strut}
+    }
+  },
+}
+
 %    \end{macrocode}
 %
 % \Finale
