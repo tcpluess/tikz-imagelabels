@@ -31,6 +31,7 @@
 \usepackage{amssymb}
 \usepackage{tikz-imagelabels}
 \usepackage{float}
+\usepackage{parskip}
 
 % default position for floats: H
 \makeatletter
@@ -38,7 +39,10 @@
 \renewcommand{\fps@table}{H}
 \makeatother
 
+\setlength{\parindent}{0pt}
+
 \def\pkg{\texttt{tikz-imagelabels}}
+\def\tkz{Ti\emph{k}Z}
 
 \begin{document}
   \DocInput{tikz-imagelabels.dtx}
@@ -68,7 +72,8 @@
 %
 % \GetFileInfo{tikz-imagelabels.sty}
 %
-% \title{The \texttt{tikz-imagelabels} package\thanks{This document corresponds to \texttt{tikz-imagelabels}~\fileversion, dated~\filedate.}}
+% \title{The \texttt{tikz-imagelabels} package\thanks{This document corresponds
+% to \texttt{tikz-imagelabels}~\fileversion, dated~\filedate.}}
 % \author{Tobias Plüss}
 % \date{\filedate}
 % \thispagestyle{empty}
@@ -85,17 +90,17 @@
 %
 % \StopEventually{}
 %
-% \section{What is it good for?}
+% \section{Introduction}
 %
-% The package \pkg{} serves two purposes:
-% \begin{itemize}
-% \item put annotation labels on images, as shown for example in \autoref{fig:pleiades}. This figure shows the pleiades and has a label for each star. Also, on the bottom right, there is a small label for the whole image.\footnote{Image taken from \url{http://hubblesite.org/image/1562/news_release/2004-20}}
-% \item put little arrows on a image to highlight certain details, like in \autoref{fig:jupiter}. This figure shows the great red spot in jupiter, with some additional small spots. The spots are highlighted with the aid of the arrows.\footnote{Image taken from \url{http://hubblesite.org/image/2354/news_release/2008-23}}
-% \end{itemize}
+% For manuals, scientific reports and the like, one often needs to add
+% annotations to an image (mostly a photograph) to label different items.
+% An example of this is shown in \autoref{fig:pleiades}, which shows the names
+% of the different stars in a star constellation. The package \pkg{} allows to
+% produce this kind of illustration.
 %
 % \begin{figure}
 % \centering
-% \begin{annotationimage}{width=6cm}{img/pleiades.jpg}
+% \begin{annotationimage}{width=6cm}{pleiades.jpg}
 %   \draw[annotation left = {Atlas at 0.3}] to (0.11,0.4);
 %   \draw[annotation left = {Pleione at 0.55}] to (0.11,0.49);
 %   \draw[annotation left = {Alcyone at 0.8}] to (0.39,0.45);
@@ -104,63 +109,60 @@
 %   \draw[annotation right = {Caleano at 0.75}] to (0.85,0.64);
 %   \draw[annotation above = {Maia at 0.4}] to (0.67,0.72);
 %   \draw[annotation above = {Taygeta at 0.9}] to (0.78,0.82);
- % \draw[marking arrow] (0.6,0.5) -- (0.5,0.5);
-%   \draw[circular annotation below = {void at 0.3 size 0.5cm}] to (0.2,0.2);
 %   \imagelabel{M45}
 % \end{annotationimage}
 % \caption{The Pleiades, also known as M45}
 % \label{fig:pleiades}
 % \end{figure}
 %
-% \begin{figure}
-% \centering
-%
-% \begin{annotationimage}{width=6cm}{img/jupiter.jpg}
-%    %%\marking{0.14}{0.38}{150}
-%    %%\marking{0.27}{0.24}{-120}
-%    %%\marking{0.65}{0.4}{-30}
-%    %%\marking{0.39}{0.11}{40}
-%    %%\marking{0.74}{0.12}{160}
-%    \draw[marking arrow] (0.6,0.5) -- (0.5,0.5);
-% \end{annotationimage}
-% \caption{Detail around the great red spot on jupiter}
-% \label{fig:jupiter}
-% \end{figure}
-%
-% But why does this task deserve its own \LaTeX package? there are several reasons:
+% But why does this task deserve its own \LaTeX package? there are several
+% reasons:
 % \begin{itemize}
-%   \item one does not need to edit the photographs in an external graphics
+%   \item One does not need to edit the image in an external graphics
 %   program. They can be input directly into your \LaTeX{} document.
-%   \item since the labels and annotations are processed by \LaTeX{}, all the font
-%   settings and the like remain consistent through the whole the document, including
-%   the labels for images.
-%   \item since the arrows are processed by Ti\emph{k}Z, they are vector graphics.
-%   If one would draw the annotations inside the pixel image, issues with scaling
-%   may occur -- i.e. if on scales up the pixel image, the annotations would be
-%   scaled as well, which often produces a blurry result. On the other hand,
-%   using \pkg{}, the image can be scaled later by any desired amount, while the
-%   annotations stay in place and font sizes and the like are not affected.
+%
+%   \item Since the labels and annotations are processed by \LaTeX{}, all the
+%   font settings and the like remain consistent through the whole the document.
+%   However, of course the \pkg{} package allows to configure the style, and it
+%   ensures that it stays consistent throughout the document.
+%
+%   \item Since the arrows are processed by \tkz{}, they are vector
+%   graphics and thus, issues with scaling or unsharp/blurry labels, which would
+%   result if one labels the image in a graphics software, are avoided.
 % \end{itemize}
 %
-% \section{How it works}
+% The placement of annotations is done as follows: First, the image is included
+% into the document using the |annotationimage| environment. Then, a help grid
+% with coordinates can be displayed. This is used to find the coordinates of the
+% objects to be labeled. An example of a image with activated help grid is
+% shown in \autoref{fig:pleiades_grid}.
 %
-% The placement of labels or arrows is done as follows:
-% \begin{enumerate}
-%   \item The user includes the desired image by using the \verb|annotationimage| environment.
-%   \item After that, a help grid can be displayed, as shown in \autoref{fig:pleiades_grid}, by using the \verb|\helpgrid| command. The help grid is scaled such that its bottom left corner always has coordinate $(0,0)$ and the top right corner has always coordinate $(1,1)$. The coordinate axes are labeled accordingly.
 % \begin{figure}
 % \centering
 % \helpgrid
-% \begin{annotationimage}{width=6cm}{img/pleiades.jpg}
+% \begin{annotationimage}{width=6cm}{pleiades.jpg}
 % \end{annotationimage}
 % \caption{Activated help grid}
 % \label{fig:pleiades_grid}
 % \end{figure}
-%   \item The user picks the coordinates for the points to be labeled and inserts the label texts into the \LaTeX{} file.
-%   \item After the labels have been placed as desired, the help grid and the coordinates can be hidden by removing the \verb|\helpgrid| command.
-% \end{enumerate}
-% Note that the labels will remain fixed, even if the image is scaled later, so it will not be necessary to adjust the coordinates
-% later when scaling the image.
+%
+% Using the |\draw| macro from \tkz{}, one then may add the desired annotations
+% and labels. The image shown in \autoref{fig:pleiades} was produced using the
+% following code:
+%
+% \begin{verbatim}
+% \begin{annotationimage}{width=6cm}{pleiades.jpg}
+%   \draw[annotation left = {Atlas at 0.3}] to (0.11,0.4);
+%   \draw[annotation left = {Pleione at 0.55}] to (0.11,0.49);
+%   \draw[annotation left = {Alcyone at 0.8}] to (0.39,0.45);
+%   \draw[annotation below = {Merope at 0.5}] to (0.58,0.28);
+%   \draw[annotation right = {Electra at 0.3}] to (0.84,0.45);
+%   \draw[annotation right = {Caleano at 0.75}] to (0.85,0.64);
+%   \draw[annotation above = {Maia at 0.4}] to (0.67,0.72);
+%   \draw[annotation above = {Taygeta at 0.9}] to (0.78,0.82);
+%   \imagelabel{M45}
+% \end{annotationimage}
+% \end{verbatim}
 %
 
 % \section{Usage}
@@ -317,7 +319,7 @@
 % Define the text format of the annotation labels. The default is: normal font, small.
 %    \begin{macrocode}
   annotation format/.store in = \annotationfont,
-  annotation format = \normalfont\scriptsize,
+  annotation format = \normalfont\small,
 %    \end{macrocode}
 % Define the length of the annotation arrows. The default is 8\,mm.
 %    \begin{macrocode}
