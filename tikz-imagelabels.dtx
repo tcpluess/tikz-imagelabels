@@ -114,6 +114,18 @@
 % \caption{The Pleiades, also known as M45}
 % \label{fig:pleiades}
 % \end{figure}
+
+% \begin{figure}
+% \centering
+% \begin{annotationimage}[grid]{width=6cm}{img/jupiter.jpg}
+%   \draw[circular annotation right = {Great red spot at 0.25 size 1.8cm}] to (0.65, 0.4);
+%   \draw[image label = {Jupiter at south east}];
+% \end{annotationimage}
+% \caption{The Pleiades, also known as M45}
+% \label{fig:jupiter}
+% \end{figure}
+
+
 %
 % But why does this task deserve its own \LaTeX package? there are several
 % reasons:
@@ -299,106 +311,129 @@
 % only used once in the preamble. This ensures that all images have the same
 % style.
 %
-% \subsection{Grid}
-%
-% For the grid, following parameters can be configured:
-% \begin{itemize}
-%   \item |main grid color| is the color of the thicker grid lines.
-%   \item |fine grid color| is the color of the thin grid lines.
-% \end{itemize}
-% The example below shows how the grid colors can be configured.
-%
-% \begin{minipage}[c]{.49\textwidth}
+% The default style used is as follows:
 % \begin{verbatim}
 % \imagelabelset{
-%   main grid color = green,
-%   fine grid color = black,
+%   coarse grid color = red,
+%   fine grid color = gray,
+%   image label font = \sffamily\bfseries\small,
+%   image label distance = 2mm,
+%   image label back = black,
+%   image label text = white,
+%   annotation font = \normalfont\small,
+%   annotation text = black,
+%   arrow distance = 1.5mm,
+%   border color = white,
+%   arrow color = black,
+%   arrow thickness = 0.5mm,
+%   tip size = 1.5mm,
 % }
 % \end{verbatim}
-% \end{minipage}
-% \begin{minipage}[c]{.49\textwidth}
-% \imagelabelset{
-%   main grid color = green,
-%   fine grid color = black,
-% }
-%   \begin{annotationimage}[grid]{width=5cm}{example-image}|
-%   \end{annotationimage}
-% \end{minipage}
 %
-% \subsection{Format of labels}
-%
-% The labels support following properties:
 % \begin{itemize}
-%   \item |image label font|, configures the font for the label
-%   \item |image label distance|, sets the distance between the border of the
-%   image ant the label
-%   \item |image label back| sets the background color (default black)
-%   \item |image label text| sets the text color
+%   \item |coarse grid color| and |fine grid color| are the colors used
+%   to draw the grid.
+%
+%   \item |image label font| is the font used for the text in a label.
+%
+%   \item |image label distance| is the distance between the border of the image
+%   and the border of a label, as illustrated by the distance $d$ in
+%   \autoref{fig:imagelabeldistance_example}.
+%
+% \begin{figure}
+% \centering
+% \imagelabelset{
+%    image label font = \Huge\sffamily\bfseries,
+%    image label distance = 1cm}
+% \begin{annotationimage}{width=5cm}{example-image}
+%   \draw[image label = {Label at south east}];
+%   \draw[>=latex, red, <->] (1,0.3) -- ++(-1cm,0) node[above, midway] {$d$};
+%   \draw[>=latex, red, <->] (0.7,0) -- ++(0,1cm) node[midway, right] {$d$};
+% \end{annotationimage}
+% \caption{Illustration of the \meta{image label distance}}
+% \label{fig:imagelabeldistance_example}
+% \end{figure}
+%
+%   \item |image label back| is the background color of the image label.
+%
+%   \item |image label text| is the text color of the image label.
+%
+%   \item |annotation font| is the font used for annotations.
+%
+%   \item |annotation text| is the color used for annotations.
+%
+%   \item |arrow distance| is the distance between the very tip of an
+%   annotation arrow and the actual coordinate it is pointing at. This distance
+%   is introduced to avoid arrows covering the interesting points of an image.
+%   \autoref{fig:arrowdistance_example} illustrates the |arrow distance|. Note
+%   that both annotations point to the coordinate $(0.5, 0.5)$, but due to the
+%   |arrow distance|, the arrows are actually shorter. The circle's radius $x$
+%   is equal to the |arrow distance|.
+%
+% \begin{figure}
+% \centering
+% \imagelabelset{arrow distance = 1cm}
+% \begin{annotationimage}{width=5cm}{example-image}
+%   \draw[annotation right = {text at 0.5}] to (0.5,0.5);
+%   \draw[annotation left = {text at 0.1}] to (0.5,0.5);
+%   \draw[annotation left = {text at 0.7}] to (0.5,0.5);
+%   \draw[annotation below = {text at 0.4}] to (0.5,0.5);
+%   \draw[annotation above = {text at 0.8}] to (0.5,0.5);
+%   \draw[red] (0.5,0.5) circle[radius = 1cm];
+%   \draw[>=latex, red, <->] (0.5,0.5) -- ++(60:1cm) node[midway, left] {$x$};
+% \end{annotationimage}
+% \caption{Illustration of the \meta{arrow distance}}
+% \label{fig:arrowdistance_example}
+% \end{figure}
+%
+%   \item \meta{border color} is the contrast color used to ensure the arrows
+%   are visible on any background. See \autoref{fig:arrow_border_color_example}
+%   for an example.
+%
+%   \item \meta{arrow color} is the color for the arrows themselves. Refer to
+%   \autoref{fig:arrow_border_color_example} for an example.
+%
+% \begin{figure}
+% \centering
+%   \let\tikzset\imagelabelset
+% \begin{tikzpicture}
+% \begin{scope}
+% \imagelabelset{border color = blue!20, arrow color = blue, arrow thickness = 1cm, tip size = 2cm, arrow distance=0}
+%   \draw[annotation arrow] (0,0) -- (4cm,0);
+% \end{scope}
+% \draw[annotation arrow, on layer = {l2}] (0,-2) node[below] {border color} -- (0.5,-0.2);
+% \draw[annotation arrow, on layer = {l2}] (2,-2) node[below] {arrow color} -- (3, 0);
+% \end{tikzpicture}
+% \caption{Illustration of the \meta{arrow color} and \meta{border color}}
+% \label{fig:arrow_border_color_example}
+% \end{figure}
+%
+%   \item \meta{arrow thickness} is the thickness of the arrows, including the
+%   border. It corresponds to parameter $t$ in
+%   \autoref{fig:arrowthickness_tipsize_example}.
+%
+%   \item \meta{tip size} is the size of the round dot at the end of the arrows.
+%   It corresponds to parameter $D$ in
+%   \autoref{fig:arrowthickness_tipsize_example}.
+%
 % \end{itemize}
+
+% \begin{figure}
+% \centering
+% \imagelabelset{border color = blue!20, arrow thickness = 1cm, tip size = 2cm, arrow distance=0}
+%   \let\tikzset\imagelabelset
+% \begin{tikzpicture}
+%   \draw[annotation arrow] (0,0) -- (4cm,0);
+%   \draw[>=latex, red, <->, on layer = l2] (0.5,-0.5) -- ++(0,1cm) node[right, midway] {$t$};
+%   \draw[>=latex, red, <->, on layer = l2] (3cm,-1cm) -- ++(0,2cm) node[right, midway] {$D$};
+% \end{tikzpicture}
+% \caption{Illustration of the \meta{arrow thickness} and \meta{tip size}}
+% \label{fig:arrowthickness_tipsize_example}
+% \end{figure}
+
+
 %
-% \begin{minipage}[c]{.49\textwidth}
-% \begin{verbatim}
-% \imagelabelset{
-%   image label font =
-%      \ttfamily\bfseries\Large,
-%   image label distance = 10mm,
-%   image label back = yellow,
-%   image label text = red,
-% }
-% \end{verbatim}
-% \end{minipage}
-% \begin{minipage}[c]{.49\textwidth}
-% \imagelabelset{
-%   image label font =
-%     \ttfamily\bfseries\Large,
-%   image label back = yellow,
-%   image label text = red,
-%   image label distance = 1mm,
-% }
-%   \begin{annotationimage}{width=5cm}{example-image}|
-%   \draw[image label = {tt font at south east}];
-%   \end{annotationimage}
-% \end{minipage}
 %
-% \subsection{Format of annotations}
-%
-% The annotations have following properties:
-% \begin{itemize}
-%   \item |annotation font| is the font of the actual annotation
-%   \item |arrow distance| is the distance between the very tip of the arrow and the actual coordinate specified
-%   \item |border color| is the contrast color (halo) around the arrow to ensure it is visible on any background
-%   \item |arrow color| is the color of the line of the arrow and the dot at the tip
-%   \item |arrow thickness| is the line width (including the border)
-%   \item |tip size| is the size of the arrow's tip
-% \end{itemize}
-%
-% \begin{minipage}[c]{.49\textwidth}
-% \begin{verbatim}
-% \imagelabelset{
-%   annotation font = \sffamily\tiny,
-%   arrow distance = 0mm,
-%   border color = blue,
-%   arrow color = green,
-%   arrow thickness = 2mm,
-%   tip size = 5mm,
-%   annotation text color = red,
-% }
-% \end{verbatim}
-% \end{minipage}
-% \begin{minipage}[c]{.49\textwidth}
-% \imagelabelset{
-%   annotation font = \sffamily\tiny,
-%   arrow distance = 0mm,
-%   border color = blue,
-%   arrow color = green,
-%   arrow thickness = 2mm,
-%   tip size = 5mm,
-%   annotation text color = red,
-% }
-%   \begin{annotationimage}{width=5cm}{example-image}|
-%   \draw[annotation below = {stuff at 0.3}] to (0.5, 0.5);
-%   \end{annotationimage}
-% \end{minipage}
 
 %
 % \section{Implementation}
@@ -423,39 +458,42 @@
 
 % grid
 \imagelabelset{
-  main grid color/.store in = \maingridcolor,
-  main grid color = red,
+  coarse grid color/.store in = \maingridcolor,
   fine grid color/.store in = \finegridcolor,
-  fine grid color = gray,
 }
 
 % labels
 \imagelabelset{
   image label font/.store in = \imagelabelfont,
-  image label font = \sffamily\bfseries\small,
   image label distance/.store in = \imagelabelsep,
-  image label distance = 2mm,
   image label back/.store in = \imagelabelback,
-  image label back = black,
   image label text/.store in = \imagelabeltext,
-  image label text = white,
 }
 
 % annotations
 \imagelabelset{
   annotation font/.store in = \annotationfont,
-  annotation font = \normalfont\small,
-  annotation text color/.store in = \annottextcolor,
-  annotation text color = black,
+  annotation text/.store in = \annottextcolor,
   arrow distance/.store in = \arrowdistance,
-  arrow distance = 1.5mm,
   border color/.store in = \bordercolor,
-  border color = white,
   arrow color/.store in = \arrowcolor,
-  arrow color = black,
   arrow thickness/.store in = \arrowthickness,
-  arrow thickness = 0.5mm,
   tip size/.store in = \tipsize,
+}
+
+\imagelabelset{
+  coarse grid color = red,
+  fine grid color = gray,
+  image label font = \sffamily\bfseries\small,
+  image label distance = 2mm,
+  image label back = black,
+  image label text = white,
+  annotation font = \normalfont\small,
+  annotation text = black,
+  arrow distance = 1.5mm,
+  border color = white,
+  arrow color = black,
+  arrow thickness = 0.5mm,
   tip size = 1.5mm,
 }
 
@@ -517,14 +555,14 @@
       -{Circle[fill=\bordercolor, length=\tipsize,  width=\tipsize]},
       line width = \arrowthickness,
       \bordercolor,
-      shorten >= \arrowdistance - \tipsize/2,
+      shorten >= \arrowdistance % - \tipsize/2,
     },
     on layer = l2,
     draw,
     -{Circle[fill=\arrowcolor, length=\tipsize-2*\arrowthickness/3, width=\tipsize-2*\arrowthickness/3]},
     \arrowcolor,
     line width = \arrowthickness/3,
-    shorten >= \arrowthickness/3 + \arrowdistance - \tipsize/2,
+    shorten >= \arrowthickness/3 + \arrowdistance % - \tipsize/2,
   },
   annotation below/.style args = {#1 at #2}{
     annotation arrow,
@@ -682,6 +720,27 @@
     insert path = {
     % text depth=0.25em, inner sep=0.2em,
       (#2,-0.1) node[anchor = north, font=\annotationfont] {#1\strut}
+    }
+  },
+  circular annotation right/.style args = {#1 at #2 size #3}{
+    circular arrow = #3,
+    insert path = {
+    % text depth=0.25em, inner sep=0.2em,
+      (1.1, #2) node[anchor = west, font=\annotationfont] {#1\strut}
+    }
+  },
+  circular annotation above/.style args = {#1 at #2 size #3}{
+    circular arrow = #3,
+    insert path = {
+    % text depth=0.25em, inner sep=0.2em,
+      (#2,1.1) node[anchor = south, font=\annotationfont] {#1\strut}
+    }
+  },
+  circular annotation left/.style args = {#1 at #2 size #3}{
+    circular arrow = #3,
+    insert path = {
+    % text depth=0.25em, inner sep=0.2em,
+      (-0.1, #2) node[anchor = east, font=\annotationfont] {#1\strut}
     }
   },
 }
