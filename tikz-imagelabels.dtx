@@ -123,14 +123,17 @@
 %
 %   \item Since the labels and annotations are processed by \LaTeX{}, all the
 %   font settings and the like remain consistent through the whole the document.
-%   However, of course the \pkg{} package allows to configure the style, and it
-%   ensures that it stays consistent throughout the document.
+%   However, of course the \pkg{} package allows to configure the style.
+%
+%   \item The annotations stay rock-solid if the image needs to be rescaled
+%   later.
 %
 %   \item Since the arrows are processed by \tkz{}, they are vector
 %   graphics and thus, issues with scaling or unsharp/blurry labels, which would
 %   result if one labels the image in a graphics software, are avoided.
 % \end{itemize}
 %
+% \clearpage
 % \autoref{fig:pleiades} was created with the following code:
 % \begin{verbatim}
 % \begin{annotationimage}{width=6cm}{pleiades.jpg}
