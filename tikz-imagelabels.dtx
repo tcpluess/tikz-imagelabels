@@ -111,23 +111,11 @@
 %   \draw[annotation above = {Taygeta at 0.9}] to (0.78,0.82);
 %   \draw[image label = {M45 at south east}];
 % \end{annotationimage}
-% \caption{The Pleiades, also known as M45}
+% \caption{The Pleiades, also known as M45. Image source: \url{http://hubblesite.org/newscenter/archive/releases/2004/20/image/a/}}
 % \label{fig:pleiades}
 % \end{figure}
-
-% \begin{figure}
-% \centering
-% \begin{annotationimage}[grid]{width=6cm}{img/jupiter.jpg}
-%   \draw[circular annotation right = {Great red spot at 0.25 size 1.8cm}] to (0.65, 0.4);
-%   \draw[image label = {Jupiter at south east}];
-% \end{annotationimage}
-% \caption{The Pleiades, also known as M45}
-% \label{fig:jupiter}
-% \end{figure}
-
-
 %
-% But why does this task deserve its own \LaTeX package? there are several
+% But why does this task deserve its own \LaTeX{} package? there are several
 % reasons:
 % \begin{itemize}
 %   \item One does not need to edit the image in an external graphics
@@ -143,24 +131,7 @@
 %   result if one labels the image in a graphics software, are avoided.
 % \end{itemize}
 %
-% The placement of annotations is done as follows: First, the image is included
-% into the document using the |annotationimage| environment. Then, a help grid
-% with coordinates can be displayed. This is used to find the coordinates of the
-% objects to be labeled. An example of a image with activated help grid is
-% shown in \autoref{fig:pleiades_grid}.
-%
-% \begin{figure}
-% \centering
-% \begin{annotationimage}[grid]{width=6cm}{pleiades.jpg}
-% \end{annotationimage}
-% \caption{Activated help grid}
-% \label{fig:pleiades_grid}
-% \end{figure}
-%
-% Using the |\draw| macro from \tkz{}, one then may add the desired annotations
-% and labels. The image shown in \autoref{fig:pleiades} was produced using the
-% following code:
-%
+% \autoref{fig:pleiades} was created with the following code:
 % \begin{verbatim}
 % \begin{annotationimage}{width=6cm}{pleiades.jpg}
 %   \draw[annotation left = {Atlas at 0.3}] to (0.11,0.4);
@@ -180,97 +151,49 @@
 % \subsection{Inclusion of the image}
 %
 % \DescribeEnv{annotationimage}
-% To actually include an image, the |annotationimage| environment is used. It
+% To include an image, the |annotationimage| environment is used. It
 % has the following syntax:
 %
 % |annotationimage|\oarg{grid}\marg{options}\marg{file name}
 %
 % The \meta{grid} is an optional parameter. If this parameter is present, i.e.
-% if it has the value |[grid]|, then the help grid is visible. If the parameter
-% is omitted, no help grid is drawn. For instance, \autoref{fig:pleiades_grid}
-% was produced using the following code:
+% if it has the value |[grid]|, then a coordinate grid is visible. The
+% coordinate grid is used to find the coordinates of the points to be labelled.
+% If the parameter \meta{grid} is omitted, no coordinate grid is drawn. The code
 %
 % \begin{verbatim}
-% \begin{annotationimage}[grid]{width=6cm}{pleiades.jpg}|
+% \begin{annotationimage}[grid]{width=6cm}{pleiades.jpg}
 % \end{annotationimage}
 % \end{verbatim}
 %
-% \meta{options} is any set of options understood by the
-% |\includegraphics| command, e.g. |width=|, |height=| and so on. It may also be
-% left empty.
-%
-% The \meta{file name} is, obviously, the file name of the image. Like for the
-% \meta{options}, any image format supported by |\includegraphics| may be used.
-%
-% \subsection{Adding annotations} \label{sect:add_annotations}
-%
-% An annotation is added with the aid of the \tkz{} macro |\draw|. The syntax is
-% as follows:
-%
-% |\draw[annotation |\meta{alignment}| = {|\meta{text}| at |\meta{position}|}] to (|\meta{x}|, |\meta{y}|);|
-%
-% The \meta{alignment} is one of: |above|, |right|, |below| or |left|. It tells
-% on which side of the image the annotation will appear.
-%
-% The \meta{text} is the actual text of the annotation. It may contain spaces
-% and so on. However, if the text ends with the word ``at'', this will cause
-% trouble with the subsequent options. Example:
-%
-% |\draw[annotation below = {troubles at at 0.5}] to (0.5, 0.5);|
-%
-% This code won't compile. However, if it is required to end the label text with
-% ``at'', the text may be put in curly braces:
-%
-% |\draw[annotation below = {{troubles at} at 0.5}] to (0.5, 0.5);|
-%
-% The \meta{position} is the location of the text. If the text is left or right
-% of the image, a \meta{position} of 0 will align the text with the very bottom
-% of the image, whereas a location of 1 will align the text with the top of the
-% image. Consequently, if the text is to be put above or below of the image, a
-% \meta{position} of 0 will align the text with the image's left side, whereas
-% a \meta{position} of 1 will align the text with the image's right side.
-% \autoref{fig:position_example} should clarify how the \meta{position} is
-% interpreted.
+% produces the image shown in \autoref{fig:grid-example}.
 %
 % \begin{figure}
 %   \centering
-%   \begin{annotationimage}[grid]{width=6cm}{example-image}|
-%   \draw[annotation below = {\meta{position} = 0 at 0}] to (0.5, 0.5);
-%   \draw[annotation below = {\meta{position} = 0.5 at 0.5}] to (0.5, 0.5);
-%   \draw[annotation below = {\meta{position} = 1 at 1}] to (0.5, 0.5);
-%   \draw[annotation left = {\meta{position} = 0 at 0}] to (0.5, 0.5);
-%   \draw[annotation left = {\meta{position} = 0.5 at 0.5}] to (0.5, 0.5);
-%   \draw[annotation left = {\meta{position} = 1 at 1}] to (0.5, 0.5);
-%   \draw[annotation above = {\meta{position} = 0 at 0}] to (0.5, 0.5);
-%   \draw[annotation above = {\meta{position} = 0.5 at 0.5}] to (0.5, 0.5);
-%   \draw[annotation above = {\meta{position} = 1 at 1}] to (0.5, 0.5);
-%   \draw[annotation right = {\meta{position} = 0 at 0}] to (0.5, 0.5);
-%   \draw[annotation right = {\meta{position} = 0.5 at 0.5}] to (0.5, 0.5);
-%   \draw[annotation right = {\meta{position} = 1 at 1}] to (0.5, 0.5);
+%   \begin{annotationimage}[grid]{width=6cm}{pleiades.jpg}
 %   \end{annotationimage}
-%   \caption{Example for the position}
-%   \label{fig:position_example}
+%   \caption{Example of an image with coordinate grid}
+%   \label{fig:grid-example}
 % \end{figure}
 %
-% The \meta{x} and \meta{y} parameters are the actual coordinates where the
-% arrow should point to. Note that the arrows in \autoref{fig:position_example}
-% all have their \meta{x} and \meta{y} set to 0.5, but as one can see, there
-% is a small distance between the arrow's tip and the actual point $(0.5, 0.5)$.
-% This is a distance introduced deliberately such that the arrow tips are close
-% to the desired point, but don't cover it.
+% \meta{options} is any set of options understood by the
+% |\includegraphics| command, e.g. |width=|, |height=| and so on. It may also be
+% left empty, but in this case, the curly braces need to be there, though.
+%
+% The \meta{file name} is, obviously, the file name of the image. Like for the
+% \meta{options}, any image format supported by |\includegraphics| may be used.
 %
 % \subsection{Adding a label}
 %
 % A label (like the ``M45'' in \autoref{fig:pleiades}) can be added to the image
 % using following |\draw| macro:
 %
-% |\draw[image label = {|\meta{text}| at |\meta{position}|}];|
+% |\draw[image label = {|\meta{text}| at |\meta{placement}|}];|
 %
 % The \meta{text} parameter is obvious. It contains the text to be put into the
-% label. The same restrictions apply as for the annotations described in
-% \autoref{sect:add_annotations}.
+% label.
 %
-% The \meta{position} dictates the placement of the label. It may be one of
+% The \meta{placement} dictates the placement of the label. It may be one of
 % |north west|, |north|, |north east|, |east|, |south east|, |south|,
 % |south west| or |west|. Also |center| is possible, even though it possibly
 % doesn't make a lot of sense. \autoref{fig:label_example} shows an example
@@ -278,7 +201,7 @@
 %
 % \begin{figure}
 %   \centering
-%   \begin{annotationimage}[grid]{width=6cm}{example-image}|
+%   \begin{annotationimage}{width=6cm}{example-image}
 %   \draw[image label = {north at north}];
 %   \draw[image label = {north east at north east}];
 %   \draw[image label = {east at east}];
@@ -289,29 +212,61 @@
 %   \draw[image label = {north west at north west}];
 %   \draw[image label = {center at center}];
 %   \end{annotationimage}
-%   \caption{Example for the labels}
+%   \caption{Example for the placement labels}
 %   \label{fig:label_example}
 % \end{figure}
 %
-% Of course, the appearance of the labels can be configured in detail.
+% The label in \autoref{fig:pleiades} was drawn using the following code:
+%
+% |\draw[image label = {M45 at south east}];|
+%
+% \subsection{Adding annotations}
+%
+% An annotation is added with the aid of the \tkz{} macro |\draw|. The syntax is
+% as follows:
+%
+% |\draw[annotation |\meta{placement}| = {|\meta{text}| at |\meta{position}|}] to (|\meta{x}|, |\meta{y}|);|
+%
+% The \meta{placement} is one of: |above|, |right|, |below| or |left|. It tells
+% on which side of the image the annotation will appear. \meta{above} and
+% \meta{below} basically determine the $y$ coordinate of the text, while
+% \meta{left} and \meta{right} determine the $x$ coordinate of the text. The
+% remaining coordinate is determined using the \meta{position}.
+%
+% The \meta{text} is the actual text of the annotation.
+%
+% The \meta{x} and \meta{y} parameters are the actual coordinates where the
+% arrow should point to. Note that \pkg{} will automatically insert a small
+% distance between the arrow's tip and the coordinate given, such that the
+% arrow is close to the coordinate but does not cover it.
+%
+% For example, the code
+%
+% |\draw[annotation left = {Atlas at 0.3}] to (0.11,0.4);|
+%
+% draws the text ``Atlas'' on the left-hand side of the image, at $y=0.3$. The
+% arrow will point towards coordinate $(0.11, 0.4)$ but ends shortly before this
+% coordinate such that the interesting feature to be labelled is not covered by
+% the arrow's tip.
 %
 % \section{Configuring styles}
 %
 % \DescribeMacro{\imagelabelset}
-% The style (color, font, line width and so on) of annotations and labels may be
-% configured using the |\imagelabelset| macro.
-% The syntax is as follows:
+% Various options, like font size and so on, can be configured with the
+% |\imagelabelset| macro. It uses the key-value syntax from \tkz{}, e.g.:
 %
 % |\imagelabelset{|\meta{key}| = |\meta{value}|, ...}|
 %
 % Multiple \meta{key} and \meta{value} pairs may be combined. The following
 % sections list all possible configurations.
 %
-% |\imagelabelset| can be put anywhere in the code, but preferrably it is
-% only used once in the preamble. This ensures that all images have the same
-% style.
+% |\imagelabelset| can be put anywhere, but it makes sense to put it into the
+% preamble of a document to ensure all images have the same look.
 %
-% The default style used is as follows:
+% There is also a default style. If no |\imagelabelset| command is present, the
+% default values for all options are taken. The default style used is as
+% follows:
+%
 % \begin{verbatim}
 % \imagelabelset{
 %   coarse grid color = red,
@@ -321,29 +276,43 @@
 %   image label back = black,
 %   image label text = white,
 %   annotation font = \normalfont\small,
-%   annotation text = black,
 %   arrow distance = 1.5mm,
-%   border color = white,
-%   arrow color = black,
-%   arrow thickness = 0.5mm,
-%   tip size = 1.5mm,
+%   border thickness = 0.5pt,
+%   arrow thickness = 0.4pt,
+%   tip size = 1.2mm,
+%   outer dist = 0.5cm,
 % }
 % \end{verbatim}
 %
-% \begin{itemize}
-%   \item |coarse grid color| and |fine grid color| are the colors used
-%   to draw the grid.
+% The individual keys are described in the following sections.
 %
-%   \item |image label font| is the font used for the text in a label.
+% \subsection{Grid color}
 %
-%   \item |image label distance| is the distance between the border of the image
-%   and the border of a label, as illustrated by the distance $d$ in
-%   \autoref{fig:imagelabeldistance_example}.
+% In most cases, it will not be necessary to adjust the grid colors. However,
+% depending on the image, it may be desirable to do so. This is exactly what the
+% \meta{coarse grid color} and \meta{fine grid color} are used for. Any color
+% specification compatible to \tkz{} may be used. The defaults are red for the
+% coarse grid and gray for the fine grid.
+%
+% \subsection{Font and color for the labels}
+%
+% The font for the image labels may be configured with \meta{image label font}.
+% By default, the image labels are typeset with bold, small, sans-serif font.
+%
+% The background color of the image labels may be set using the
+% \meta{image label back} kay, whereas the text color is specified with the
+% \meta{image label text} key. Defaults for the background color and for the
+% text color are black and white, respectively.
+%
+% \subsection{Distance of image labels to the image border}
+%
+% The \meta{image label distance} key configures the distance, $d$, from the
+% image's border to the border of the image label, as shown in
+% \autoref{fig:imagelabeldistance_example}. By default, it is set to 2\,mm.
 %
 % \begin{figure}
 % \centering
 % \imagelabelset{
-%    image label font = \Huge\sffamily\bfseries,
 %    image label distance = 1cm}
 % \begin{annotationimage}{width=5cm}{example-image}
 %   \draw[image label = {Label at south east}];
@@ -354,21 +323,20 @@
 % \label{fig:imagelabeldistance_example}
 % \end{figure}
 %
-%   \item |image label back| is the background color of the image label.
+% \subsection{Font for annotations}
 %
-%   \item |image label text| is the text color of the image label.
+% The font used for annotations is set by \meta{annotation font}. By default,
+% the |\normalfont| is used with small size.
 %
-%   \item |annotation font| is the font used for annotations.
+% \subsection{Distance of arrow tips}
 %
-%   \item |annotation text| is the color used for annotations.
-%
-%   \item |arrow distance| is the distance between the very tip of an
-%   annotation arrow and the actual coordinate it is pointing at. This distance
-%   is introduced to avoid arrows covering the interesting points of an image.
-%   \autoref{fig:arrowdistance_example} illustrates the |arrow distance|. Note
-%   that both annotations point to the coordinate $(0.5, 0.5)$, but due to the
-%   |arrow distance|, the arrows are actually shorter. The circle's radius $x$
-%   is equal to the |arrow distance|.
+% As mentioned earlier, the arrows are shortened such that their tips don't
+% cover the desired point. \autoref{fig:arrowdistance_example} illustrates this.
+% All the arrows point to the same coordinate, $(0.5, 0.5)$, but they end at
+% the distance $x$ away from the point. This distance may be configured using
+% the \meta{arrow distance}. By default, this distance is set to 1.5\,mm. This
+% ensures that the arrow tips are close enough to the interesting features, but
+% not so close that they cover important parts of the image.
 %
 % \begin{figure}
 % \centering
@@ -386,61 +354,50 @@
 % \label{fig:arrowdistance_example}
 % \end{figure}
 %
-%   \item \meta{border color} is the contrast color used to ensure the arrows
-%   are visible on any background. See \autoref{fig:arrow_border_color_example}
-%   for an example.
+% \subsection{Thickness and size of the arrows}
 %
-%   \item \meta{arrow color} is the color for the arrows themselves. Refer to
-%   \autoref{fig:arrow_border_color_example} for an example.
+% The arrows themselves consist of two parts: the inner part, which is the
+% actual arrow, and the border, which is, by default, a white border around the
+% arrow. The border is required to ensure that each arrow is visible, no matter
+% on what background it is drawn. The thickness of the black line can be
+% configured using the \meta{arrow thickness}, whose default value is 0.4\,pt.
+% The thickness of the border around the arrow is configured with the
+% \meta{border thickness}, having a default value of 0.5\,pt. These two values
+% correspond to the \tkz{} line widths |thin| and |semithick|.
+%
+% The size of the round dot at the end of the arrows is configured using the
+% \meta{tip size}. \autoref{fig:arrowthickness_tipsize_example} illustrates
+% both, the \meta{arrow thickness}, and the \meta{tip size}, as parameters
+% $a$ and $b$, respectively.
 %
 % \begin{figure}
 % \centering
-%   \let\tikzset\imagelabelset
-% \begin{tikzpicture}
-% \begin{scope}
-% \imagelabelset{border color = blue!20, arrow color = blue, arrow thickness = 1cm, tip size = 2cm, arrow distance=0}
-%   \draw[annotation arrow] (0,0) -- (4cm,0);
-% \end{scope}
-% \draw[annotation arrow, on layer = {l2}] (0,-2) node[below] {border color} -- (0.5,-0.2);
-% \draw[annotation arrow, on layer = {l2}] (2,-2) node[below] {arrow color} -- (3, 0);
-% \end{tikzpicture}
-% \caption{Illustration of the \meta{arrow color} and \meta{border color}}
-% \label{fig:arrow_border_color_example}
-% \end{figure}
-%
-%   \item \meta{arrow thickness} is the thickness of the arrows, including the
-%   border. It corresponds to parameter $t$ in
-%   \autoref{fig:arrowthickness_tipsize_example}.
-%
-%   \item \meta{tip size} is the size of the round dot at the end of the arrows.
-%   It corresponds to parameter $D$ in
-%   \autoref{fig:arrowthickness_tipsize_example}.
-%
-% \end{itemize}
-
-% \begin{figure}
-% \centering
-% \imagelabelset{border color = blue!20, arrow thickness = 1cm, tip size = 2cm, arrow distance=0}
+% \imagelabelset{arrow thickness = 1cm, tip size = 2cm, arrow distance=0}
 %   \let\tikzset\imagelabelset
 % \begin{tikzpicture}
 %   \draw[annotation arrow] (0,0) -- (4cm,0);
-%   \draw[>=latex, red, <->, on layer = l2] (0.5,-0.5) -- ++(0,1cm) node[right, midway] {$t$};
-%   \draw[>=latex, red, <->, on layer = l2] (3cm,-1cm) -- ++(0,2cm) node[right, midway] {$D$};
+%   \draw[>=latex, red, <->] (0.5,-0.5) -- ++(0,1cm) node[right, midway] {$a$};
+%   \draw[>=latex, red, <->] (3cm,-1cm) -- ++(0,2cm) node[right, midway] {$b$};
 % \end{tikzpicture}
-% \caption{Illustration of the \meta{arrow thickness} and \meta{tip size}}
+% \caption{Illustration of the \meta{arrow thickness}, $a$, and
+% the \meta{tip size}, $b$}
 % \label{fig:arrowthickness_tipsize_example}
 % \end{figure}
-
-
 %
+% \subsection{Distance of annotation texts from the image}
 %
-
+% The parameter \meta{outer dist} configures how far away from the image the
+% annotation texts will be positioned. By default, this value is 0.5\,cm.
 %
 % \section{Implementation}
+% The only packages required are |tikz| and |xifthen|. If not already loaded,
+% they will be loaded automatically.
 %    \begin{macrocode}
 \RequirePackage{tikz}
 \RequirePackage{xifthen}
-
+%    \end{macrocode}
+% Some \tkz{} libraries are also reuiqred for proper operation.
+%    \begin{macrocode}
 \usetikzlibrary{
   arrows.meta,
   calc,
@@ -449,20 +406,28 @@
   decorations.markings,
   math,
 }
-
+%    \end{macrocode}
+% \subsection{Configuration}
+% For the |\imagelabelset| command, a |pgfkeys| family is defined. All
+% configurations (e.g. \meta{tip size} and so on) and styles are stored in the
+% PGF key |/imagelabels|. This ensures that these configurations don't overwrite
+% any other parameters the user may have set elsewhere.
+%    \begin{macrocode}
 \pgfkeys{
   /imagelabels/.is family,
   /imagelabels/.search also={/tikz},
 }
-\def\imagelabelset{\pgfqkeys{/imagelabels}}
 
-% grid
+\def\imagelabelset{\pgfqkeys{/imagelabels}}
+%    \end{macrocode}
+% Then, a set of macros is created which stores the values for the individual
+% configuration options.
+%    \begin{macrocode}
 \imagelabelset{
   coarse grid color/.store in = \maingridcolor,
   fine grid color/.store in = \finegridcolor,
 }
 
-% labels
 \imagelabelset{
   image label font/.store in = \imagelabelfont,
   image label distance/.store in = \imagelabelsep,
@@ -470,17 +435,21 @@
   image label text/.store in = \imagelabeltext,
 }
 
-% annotations
 \imagelabelset{
   annotation font/.store in = \annotationfont,
-  annotation text/.store in = \annottextcolor,
   arrow distance/.store in = \arrowdistance,
-  border color/.store in = \bordercolor,
-  arrow color/.store in = \arrowcolor,
   arrow thickness/.store in = \arrowthickness,
   tip size/.store in = \tipsize,
+  border thickness/.store in = \borderthickness,
+  outer dist/.store in = \labeloutersep,
 }
-
+%    \end{macrocode}
+%
+% \subsection{Default configuration}
+% The default configuration is set. This will ensure that each of the previously
+% defined macros has a valid initial value, which may be overwritten by the
+% user.
+%    \begin{macrocode}
 \imagelabelset{
   coarse grid color = red,
   fine grid color = gray,
@@ -489,29 +458,52 @@
   image label back = black,
   image label text = white,
   annotation font = \normalfont\small,
-  annotation text = black,
   arrow distance = 1.5mm,
-  border color = white,
-  arrow color = black,
-  arrow thickness = 0.5mm,
-  tip size = 1.5mm,
+  border thickness = 0.5pt,
+  arrow thickness = 0.4pt,
+  tip size = 1.2mm,
+  outer dist = 0.5cm,
 }
-
+%    \end{macrocode}
+%
+% \subsection{Environment declaration}
+% Next, the |annotationimage| environment is declared. It takes 3 arguments,
+% the first of which is optional. If it is omitted, its default value is empty.
+%    \begin{macrocode}
 \newenvironment{annotationimage}[3][]{
-  \let\tikzset\imagelabelset
+%    \end{macrocode}
+% Each time a new |annotationimage| environment is opened, this code will ensure
+% that all the definitions stored under the PGF key |/imagelabels| are loaded.
+% Then, a new |tikzpicture| is created.
+%    \begin{macrocode}
+\let\tikzset\imagelabelset
   \begin{tikzpicture}
+%    \end{macrocode}
+% The 2nd and 3rd arguments to the |annotationimage| are the size/scaling
+% options for the image, as well as the actual image file. Thus, a new \tkz{}
+% node called |image| is created; the node's content is the image.
+%    \begin{macrocode}
   \node[anchor=south west, inner sep=0]
     (image) at (0,0) {\includegraphics[#2]{#3}};
+%    \end{macrocode}
+% Using a scope ensures that the top-right corner always has coordinate $(1,1)$.
+%    \begin{macrocode}
   \begin{scope}[x={(image.south east)},y={(image.north west)}]
-    \pgfonlayer{l1}
-      \path[clip] (0,0) rectangle (1,1);
-    \endpgfonlayer
+%    \end{macrocode}
+% Next, the first (optional) argument's value is checked. If the user said
+% |[grid]| to the first argument, the following code is executed.
+%    \begin{macrocode}
   \ifthenelse{\equal{#1}{grid}}{%
+%    \end{macrocode}
+% This actually draws the coordinate grid.
+%    \begin{macrocode}
     \draw[very thin, draw=\finegridcolor, step=0.02]
       (0,0) grid (1,1);
     \draw[thin, draw=\maingridcolor, xstep=0.1, ystep=0.1]
       (0,0) grid (1,1);
-
+%    \end{macrocode}
+% then, the labels are put to the coordinate axes.
+%    \begin{macrocode}
     \foreach \x in {0,1,...,9} {
       \node [anchor=north] at (\x/10,0) {\tiny 0.\x};
     }
@@ -524,75 +516,112 @@
   }{}
 }
 {
+%    \end{macrocode}
+% Each time the |annotationimage| environment is closed, the previously opened
+% |scope| and |tikzpicture| environments need to be closed as well.
+%    \begin{macrocode}
  \end{scope}
  \end{tikzpicture}}
-
-\pgfdeclarelayer{l1}
-\pgfdeclarelayer{l2}
-\pgfsetlayers{main,l1,l2}
-
-\pgfkeys{%
-  /tikz/on layer/.code={
-    \pgfonlayer{#1}\begingroup
-    \aftergroup\endpgfonlayer
-    \aftergroup\endgroup
-  },
-  /tikz/node on layer/.code={
-    \pgfonlayer{#1}\begingroup
-    \expandafter\def\expandafter\tikz@node@finish\expandafter{\expandafter\endgroup\expandafter\endpgfonlayer\tikz@node@finish}%
-  },
-}
-
-% tikz styles for annotations.
+%    \end{macrocode}
+%
+% \subsection{Style definitions for the annotations}
+% What follows is the definition of the styling for the annotations.
+%    \begin{macrocode}
 \imagelabelset{
-  % these are the arrows with the black dot at the end.
+%    \end{macrocode}
+% This is the style for the annotation arrow itself.
+%    \begin{macrocode}
   annotation arrow/.style =
   {
+%    \end{macrocode}
+% The |preaction| first draws a thick white arrow. This arrow will become the
+% border.
+%    \begin{macrocode}
     preaction =
     {
-      on layer = l1,
       draw,
-      -{Circle[fill=\bordercolor, length=\tipsize,  width=\tipsize]},
-      line width = \arrowthickness,
-      \bordercolor,
-      shorten >= \arrowdistance % - \tipsize/2,
+      -{Circle[fill=white, length=\tipsize+2*\borderthickness,
+        width=\tipsize+2*\borderthickness]},
+      line width = 2*\borderthickness + \arrowthickness,
+      white,
+      shorten >= \arrowdistance,
     },
-    on layer = l2,
+%    \end{macrocode}
+% After the |preaction| has been performed, this will actually draw the
+% ``normal'' arrow.
+%    \begin{macrocode}
     draw,
-    -{Circle[fill=\arrowcolor, length=\tipsize-2*\arrowthickness/3, width=\tipsize-2*\arrowthickness/3]},
-    \arrowcolor,
-    line width = \arrowthickness/3,
-    shorten >= \arrowthickness/3 + \arrowdistance % - \tipsize/2,
+    -{Circle[fill=black, length=\tipsize, width=\tipsize]},
+    black,
+    line width = \arrowthickness,
+    shorten >= \borderthickness + \arrowdistance,
   },
+%    \end{macrocode}
+% All the annotation texts have a common style. This ensures they have the same
+% font etc. Setting the |inner sep| to 0.5\,ex ensures that the distance between
+% the text and the arrow is somewhat aesthetic. It is an empirically determined
+% value.
+%    \begin{macrocode}
+  annotation node/.style =
+  {
+    font=\annotationfont,
+    inner sep = 0.5ex,
+  },
+%    \end{macrocode}
+% Next comes the styles for the different annotation placements. For an
+% annotation being below the image, this style applies.
+%    \begin{macrocode}
   annotation below/.style args = {#1 at #2}{
+%    \end{macrocode}
+% Using the annotation arrow style tells \tkz{} to draw an arrow as specified
+% above, using the geometry defined with |\imagelabelset|.
+%    \begin{macrocode}
     annotation arrow,
+%    \end{macrocode}
+% After the arrow has been drawn, a further path is inserted, which is the
+% actual annotation text. For the annotations being above and below the image
+% special care must be taken: a |\strut| is appended to the label text to ensure
+% that texts being on the same side of the image are on the same line. Without
+% the strut, the texts may be differently aligned, depending on their letters --
+% e.g. letters ``p'' and ``g'' go slightly further down in the $y$ direction
+% than ``a'' or ``b''.
+%    \begin{macrocode}
     insert path = {
-    % text depth=0.25em, inner sep=0.2em,
-      (#2,-0.1) node[anchor = north, font=\annotationfont, text = \annottextcolor] {#1\strut}
+      (#2,0) ++ (0,-\labeloutersep)
+        node[anchor = north, annotation node] {#1\strut}
     }
   },
+%    \end{macrocode}
+% The remaining annotation styles are defined similarly.
+%    \begin{macrocode}
   annotation above/.style args = {#1 at #2}{
     annotation arrow,
     insert path = {
-    % text depth=0.25em, inner sep=0.2em,
-      (#2,1.1) node[anchor = south, font=\annotationfont, text = \annottextcolor] {#1\strut}
+      (#2,1.0) ++ (0,\labeloutersep)
+        node[anchor = south, annotation node] {#1\strut}
     }
   },
   annotation left/.style args = {#1 at #2}{
     annotation arrow,
     insert path = {
-      (-0.1,#2) node[anchor = east, font=\annotationfont, text = \annottextcolor] {#1}
+      (0,#2) ++ (-\labeloutersep,0)
+        node[anchor = east, annotation node] {#1}
     }
   },
   annotation right/.style args = {#1 at #2}{
     annotation arrow,
     insert path = {
-      (1.1,#2) node[anchor = west, font=\annotationfont, text = \annottextcolor] {#1}
+      (1.0,#2) ++ (\labeloutersep,0)
+        node[anchor = west, annotation node] {#1}
     }
   },
 }
-
-% labels
+%    \end{macrocode}
+%
+% \subsection{Style definitions for the labels}
+% Next follows the style definition for the image labels. A general style
+% defines the appearance and color.
+%    \begin{macrocode}
 \imagelabelset{
   image label style/.style = {
     rectangle,
@@ -601,150 +630,17 @@
     fill = \imagelabelback,
     text = \imagelabeltext,
     font = \imagelabelfont,
-    % xshift = -0.2cm,
-    % yshift = 0.2cm,
   },
+%    \end{macrocode}
+% On the other hand, the |image label| style defines the actual image labels.
+%    \begin{macrocode}
   image label/.style args = {#1 at #2}{
-    % anchor = #2,
     insert path = {
-    % text depth=0.25em, inner sep=0.2em,
-      % (image.#2) node[anchor = #2, image label style] {#1}
-      (image.#2) node[outer sep = \imagelabelsep, anchor=#2, image label style] {#1}
+      (image.#2) node[outer sep = \imagelabelsep,
+        anchor=#2, image label style] {#1}
     }
   },
 }
-
-% style for the simple arrows
-\imagelabelset{
-  marking arrow/.style =
-  {
-    preaction = {
-      draw,
-      -{Latex[line width = \arrowthickness/3, round, fill=black, width=1.5mm,length=4mm]},
-      line width=\arrowthickness,
-      white,
-      shorten >= 0,
-      shorten <= 0,
-    },
-      draw,
-      % -{Triangle[line width = 0pt, width=1mm,length=3mm]},
-      black,
-      line width=\arrowthickness/3,
-      shorten <= \arrowthickness/3,
-      shorten >= 1.5mm %0.6mm
-  },
-  older marking arrow/.style =
-  {
-    -latex,
-    line width=\arrowthickness,
-    white,
-    shorten >= \arrowdistance,
-    postaction={
-      draw,
-      -latex,
-      black,
-      line width=\arrowthickness/3,
-      shorten <=\arrowthickness/4,
-      shorten >=4.5*\arrowthickness/3+\arrowdistance
-    }
-  },
-  double arrow/.style args={#1 colored by #2 and #3}{
-    -latex,
-    line width=#1,
-    #2,
-    shorten >= \arrowdistance,
-    postaction={
-      draw,
-      -latex,
-      #3,
-      line width=(#1)/3,
-      shorten <=(#1)/4,
-      shorten >=4.5*(#1)/3+\arrowdistance
-    }
-  },
-  marking circle/.style args = {#1}{
-    circle,
-    minimum size = #1,
-    inner sep = 0pt,
-    line width = 0.6mm,
-    draw=white,
-    inner sep = 0.3ex,
-    postaction =
-    {
-      draw,
-      black,
-      line width = 0.2mm,
-    },
-    text = black
-  },
-  old image label/.style =
-  {
-    rectangle,
-    minimum width = 5mm,
-    minimum height = 5mm,
-    fill = black,
-    text = white,
-    font = \imagelabelfont,
-    anchor = south east,
-    xshift = -0.2cm,
-    yshift = 0.2cm
-  }
-}
-
-
-% tikz style for the arrow with the circle
-\imagelabelset{
-  % arrows with a small circle at the end.
-  circular arrow/.style =
-  {
-    preaction =
-    {
-      draw,
-      on layer = l1,
-      -{Circle[open,width=#1,length=#1]},
-      \bordercolor,
-      shorten >= -#1/2,
-      line width = \arrowthickness,
-      % inner sep = 0.3ex,
-    },
-    on layer = l2,
-    draw,
-    -{Circle[open,width=#1-2*\arrowthickness/3,length=#1-2*\arrowthickness/3]},
-    black,
-    line width = \arrowthickness/3,
-    shorten >= -(#1-2*\arrowthickness/3)/2,
-    text = black
-  },
-  circular annotation below/.style args = {#1 at #2 size #3}{
-    circular arrow = #3,
-    insert path = {
-    % text depth=0.25em, inner sep=0.2em,
-      (#2,-0.1) node[anchor = north, font=\annotationfont] {#1\strut}
-    }
-  },
-  circular annotation right/.style args = {#1 at #2 size #3}{
-    circular arrow = #3,
-    insert path = {
-    % text depth=0.25em, inner sep=0.2em,
-      (1.1, #2) node[anchor = west, font=\annotationfont] {#1\strut}
-    }
-  },
-  circular annotation above/.style args = {#1 at #2 size #3}{
-    circular arrow = #3,
-    insert path = {
-    % text depth=0.25em, inner sep=0.2em,
-      (#2,1.1) node[anchor = south, font=\annotationfont] {#1\strut}
-    }
-  },
-  circular annotation left/.style args = {#1 at #2 size #3}{
-    circular arrow = #3,
-    insert path = {
-    % text depth=0.25em, inner sep=0.2em,
-      (-0.1, #2) node[anchor = east, font=\annotationfont] {#1\strut}
-    }
-  },
-}
-
 %    \end{macrocode}
 %
 % \Finale
