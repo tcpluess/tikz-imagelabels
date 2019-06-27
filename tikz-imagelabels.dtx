@@ -223,6 +223,41 @@
 %
 % |\draw[image label = {M45 at south east}];|
 %
+% \changes{v0.2}{2019/06/27}{add coordinate labels}
+% Another kind of label is the so-called ``coordinate label''. In contrast to
+% the image label, it may be positioned at arbitrary coordinates. The syntax is
+% similar to the |image label|:
+%
+% |\draw[coordinate label = {|\meta{text}| at (|\meta{coordinate}|)}];|
+%
+% An example of some coordinate labels is shown in \autoref{fig:coord-labels}.
+%
+% \begin{figure}
+% \centering
+% \begin{annotationimage}{width=6cm}{pleiades.jpg}
+%   \draw[coordinate label = {1 at (0.1,0.3)}];
+%   \draw[coordinate label = {2 at (0.4,0.6)}];
+%   \draw[coordinate label = {3 at (0.65,0.25)}];
+%   \draw[coordinate label = {4 at (0.9,0.4)}];
+%   \draw[coordinate label = {5 at (0.62,0.62)}];
+%   \draw[coordinate label = {6 at (0.83,0.8)}];
+%   \draw[image label = {M45 at south east}];
+% \end{annotationimage}
+% \caption{Example of using coordinate labels}
+% \label{fig:coord-labels}
+% \end{figure}
+%
+% \autoref{fig:coord-labels} was created using the following code:
+% \begin{verbatim}
+%   \draw[coordinate label = {1 at (0.1,0.3)}];
+%   \draw[coordinate label = {2 at (0.4,0.6)}];
+%   \draw[coordinate label = {3 at (0.65,0.25)}];
+%   \draw[coordinate label = {4 at (0.9,0.4)}];
+%   \draw[coordinate label = {5 at (0.62,0.62)}];
+%   \draw[coordinate label = {6 at (0.83,0.8)}];
+%   \draw[image label = {M45 at south east}];
+% \end{verbatim}
+%
 % \subsection{Adding annotations}
 %
 % An annotation is added with the aid of the \tkz{} macro |\draw|. The syntax is
@@ -278,6 +313,10 @@
 %   image label distance = 2mm,
 %   image label back = black,
 %   image label text = white,
+%   coordinate label font = \sffamily\bfseries\scriptsize,
+%   coordinate label distance = 2mm,
+%   coordinate label back = black,
+%   coordinate label text = white,
 %   annotation font = \normalfont\small,
 %   arrow distance = 1.5mm,
 %   border thickness = 0.6pt,
@@ -438,6 +477,13 @@
 }
 
 \imagelabelset{
+  coordinate label font/.store in = \coordinatelabelfont,
+  coordinate label distance/.store in = \coordinatelabelsep,
+  coordinate label back/.store in = \coordinatelabelback,
+  coordinate label text/.store in = \coordinatelabeltext,
+}
+
+\imagelabelset{
   annotation font/.store in = \annotationfont,
   arrow distance/.store in = \arrowdistance,
   arrow thickness/.store in = \arrowthickness,
@@ -459,6 +505,10 @@
   image label distance = 2mm,
   image label back = black,
   image label text = white,
+  coordinate label font = \sffamily\bfseries\scriptsize,
+  coordinate label distance = 2mm,
+  coordinate label back = black,
+  coordinate label text = white,
   annotation font = \normalfont\small,
   arrow distance = 1.5mm,
   border thickness = 0.6pt,
@@ -633,6 +683,14 @@
     text = \imagelabeltext,
     font = \imagelabelfont,
   },
+  coordinate label style/.style = {
+    rectangle,
+    minimum width = 3mm,
+    minimum height = 3mm,
+    fill = \coordinatelabelback,
+    text = \coordinatelabeltext,
+    font = \coordinatelabelfont,
+  },
 %    \end{macrocode}
 % On the other hand, the |image label| style defines the actual image labels.
 %    \begin{macrocode}
@@ -640,6 +698,12 @@
     insert path = {
       (image.#2) node[outer sep = \imagelabelsep,
         anchor=#2, image label style] {#1}
+    }
+  },
+  coordinate label/.style args = {#1 at (#2)}{
+    insert path = {
+      node[outer sep = \coordinatelabelsep,
+        anchor=center, coordinate label style] at (#2) {#1}
     }
   },
 }
